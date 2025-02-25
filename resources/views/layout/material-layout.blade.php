@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>@yield('pageTitle')</title>
+  <title>E-Learning :: Material</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="shortcut icon" href="{{ asset('/favicon.png') }}">
@@ -155,7 +155,7 @@
             </span>
           </a>
         </li>
-        <li class="active">
+        <li>
           <a href="{{route('student-list')}}">
             <i class="fa fa-book"></i> <span>Student List/Upload</span>
             <span class="pull-right-container">
@@ -186,7 +186,7 @@
             </span>
           </a>          
         </li>
-        <li>
+        <li class="active">
           <a href="{{route('admin-setup')}}">
             <i class="fa fa-table"></i> <span>Admin Setup</span>
             <span class="pull-right-container">
@@ -221,12 +221,12 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Student 
-       <small><h4>(Note: You can search for a student by Surname or Admission No)</h4></small>        
+        Upload Course Materials
+       <small><h4></h4></small>        
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{route('admin-dashboard')}}"><i class="fa fa-dashboard"></i> Home</a></li>        
-        <li class="active">Student</li>
+        <li class="active">Upload Course Material</li>
       </ol>
     </section>
 
@@ -237,12 +237,12 @@
           <div class="box">
             <div class="box-header">
               <h3 class="box-title"></h3>
-              <a href="{{route('student-create')}}" class="btn btn-primary">Create Student</a>
+              <a href="{{route('material-add')}}" class="btn btn-primary">Add Course Material</a>
               <div class="box-tools">
                 <div class="input-group input-group-sm" style="width: 150px;">
-                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-success">
-                Import all Students
-              </button>
+                <!-- <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-success">
+                Add Course Material
+              </button> -->
                 </div>
               </div>
               
@@ -271,48 +271,51 @@
 							{{ session('error') }}
 						</div>
 						@endif
+          
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
               <table class="table table-hover">
                 <tr>
                   <th>#</th>
                   <th>Programme</th>
-                  <th>Course</th>
+                  <th>Level</th>
+                  <th>Semester</th>
                   <th>Title</th>
                   <th>Type</th>
                   <th>File Size</th>                  
                   <th>Actions</th>                  
                 </tr>
-                @if ($student->count() > 0)
-                @foreach ($student as $key => $rs)
+                @if ($allMaterials->count() > 0)
+                @foreach ($allMaterials as $key => $rs)
+                @php
+                    $videoExtensions = ['mp4', 'avi', 'flv', 'mkv', 'mov', 'wmv', 'mpg', 'webm', 'ogv'];
+                    $fileExtension = pathinfo($rs->content, PATHINFO_EXTENSION);
+                @endphp
                 <tr>
                     <td>{{ $key + 1 }}</td>
-                    <td><img src="{{asset('uploads/'. $rs->picture_name . '.jpg')}}" alt="" width="50" height="50" class="img-circle"></td>
-                    <td>{{$rs->admission_no}}</td>
-                    <td>{{ $rs->surname . " " . $rs->first_name . " " . $rs->other_name }}</td>
-                    <td>{{ $rs->department }}</td>
-                    <td>{{ $rs->department1 }}</td>
-                    <td>{{ $rs->level }}</td>
-                    <td>{{ $rs->phone_no }}</td>
-                    <td>{{ $rs->state }}</td>
-                    @if ($rs->login_status == '0')
-                    <td><span class="label label-danger">{{ $rs->login_status }}</span></td>
-                    @elseif ($rs->login_status == '1')
-                    <td><span class="label label-success">{{ $rs->login_status }}</span></td>
-                    @endif
-                    <td> <a class="label label-primary" href="{{route('student-edit.action', ['id' => $rs->id])}}">Edit</a>
-                    <a class="label label-danger" href="{{route('student-delete.action', ['id' => $rs->id])}}">Delete</a>                    
+                    <td>{{$rs->programme}}</td>
+                    <td>{{$rs->level}}</td>
+                    <td>{{$rs->semester}}</td>
+                    <td>{{ $rs->title }}</td>
+                    <td>{{ $rs->type }}</td>
+                    <td>
+                        @if(in_array($fileExtension, $videoExtensions))
+                            {{ $rs->file_size }} KB
+                        @endif
+                    </td>                   
+                    <td> <a class="label label-primary" href="{{route('material-edit', ['id' => $rs->id])}}">Edit</a>
+                    <a class="label label-danger" href="{{route('material-delete', ['id' => $rs->id])}}">Delete</a>                    
                 </td>
                 <td></td>
                 </tr>
                 @endforeach
                 @else
 		<tr>
-			<td colspan="8">Students not available.</td>
+			<td colspan="8">Course Materials not available.</td>
 		</tr>
         @endif
               </table>
-              {{ $student->links() }}
+              {{ $allMaterials->links() }}
             </div>
             <!-- /.box-body -->
           </div>

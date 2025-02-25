@@ -8,6 +8,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExamTheoryController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\AIController;
 /*
 |--------------------------------------------------------------------------
@@ -383,8 +384,18 @@ Route::get('/', function () {
         ->name('activate-user');  
         Route::post('user-search', [DashboardController::class, 'userSearch'])
         ->name('user-search');   
-        Route::get('upload/material/', [DashboardController::class, 'index'])
-        ->name('upload-material');  
+        Route::get('material/', [MaterialController::class, 'index'])
+        ->name('material');  
+        Route::get('material/add', [MaterialController::class, 'addMaterial'])
+        ->name('material-add');  
+        Route::post('material/add', [MaterialController::class, 'storeMaterial'])
+        ->name('material-store'); 
+        Route::get('material/edit/{id}', [MaterialController::class, 'editMaterial'])
+        ->name('material-edit');
+        Route::get('material/delete/{id}', [MaterialController::class, 'deleteMaterial'])
+        ->name('material-delete');
+        Route::put('material/update/{id}', [MaterialController::class, 'updateMaterial'])
+        ->name('material-update');        
         
         Route::post('lock-exam/{id}', [DashboardController::class, 'lockExam'])
         ->name('lock-exam');   

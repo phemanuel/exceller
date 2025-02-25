@@ -12,7 +12,8 @@ class Material extends Model
     protected $fillable = [
         'user_id',
         'programme',
-        'course',
+        'level',
+        'semester',
         'title',
         'type',
         'content',
@@ -20,5 +21,6 @@ class Material extends Model
         'content_data',
         'file_duration',
         'file_size',
+        'acad_session',
     ];
 }

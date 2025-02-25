@@ -370,7 +370,7 @@
             <div class="box-footer">
               <form action="#" method="post">
                 <div class="input-group">                  
-                        <a href="{{route('college-setup')}}" class="btn btn-success btn-flat">Upload Materials</a>
+                        <a href="{{route('material')}}" class="btn btn-success btn-flat">Upload Materials</a>
                       </span>
                 </div>
               </form>

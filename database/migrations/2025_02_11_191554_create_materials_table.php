@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('programme');
-            $table->string('course');
+            $table->string('level');
+            $table->string('semester');
             $table->string('title');
             $table->enum('type',['video','text']);
             $table->string('content');
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->text('content_data');
             $table->string('file_duration');
             $table->string('file_size');
+            $table->string('acad_session');
             $table->timestamps();
         });
     }
