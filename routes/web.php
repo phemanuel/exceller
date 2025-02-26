@@ -40,7 +40,7 @@ Route::get('/', function () {
     //     ->name('password.update');
 
     // Home route
-    Route::get('/', [AuthController::class, 'login'])->name('home');
+    Route::get('/', [AuthController::class, 'home'])->name('home');
     // Login and signup routes
     Route::get('user-login', [AuthController::class, 'login'])->name('login');
     Route::post('user-login', [AuthController::class, 'loginAction'])->name('login.action');
