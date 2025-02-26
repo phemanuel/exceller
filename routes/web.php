@@ -50,7 +50,9 @@ Route::get('/', function () {
 
     //--User routes
     Route::group(['middleware' => ['student.auth']], function () {
-       //-----Dashboard routes-----
+       //-----Dashboard routes-----       
+    Route::get('student/dashboard/{id}', [DashboardController::class, 'indexStudent'])
+    ->name('student-dashboard'); 
     Route::get('user-dashboard/{id}', [DashboardController::class, 'index'])
     ->name('dashboard');
     // ->middleware(StudentAuth::class);  
@@ -131,6 +133,7 @@ Route::get('/', function () {
     Route::post('signup', [AuthController::class, 'signupAction'])->name('signup.action');    
     // Logout route
     Route::get('student-logout', [AuthController::class, 'studentLogout'])->name('student-logout'); 
+    
     });
 
     //----Admin routes--

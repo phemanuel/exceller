@@ -468,7 +468,7 @@ class StudentController extends Controller
                 $image = $request->file('file');
                 $imageName = $validatedData['admission_no'] . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('uploads'), $imageName); 
-                $studentData->picture_name = $imageName;
+                $studentData->picture_name = $validatedData['admission_no'] ;
             }            
                         
             //===Update student

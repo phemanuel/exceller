@@ -69,48 +69,9 @@ class AuthController extends Controller
             if (!$student) {
                 // If student doesn't exist, return error
                 return redirect()->back()->with('error', 'Invalid admission number or department');                 
-            }
-
-            // Fetch login status
-            $loginStatus = $student->login_status;
-
-            // Check login status
-            switch ($loginStatus) {
-                case 1:
-                    return redirect()->back()->with('error', 'You are already logged in.');
-
-                case 2:
-                    return redirect()->back()->with('error', 'You have completed the test.');
-
-                case 0:
-                    // Check if the exam is available
-                    $examSetting = ExamSetting::where('department', $student->department)
-                        ->where('level', $student->level)
-                        ->first();
-
-                    // If no exam is available for the student’s department/level
-                    if (!$examSetting) {
-                        return redirect()->back()->with('error', 'The exam is not available.');
-                    }
-
-                    // Check if the exam has been locked
-                    if ($examSetting->lock_status == 1) {
-                        return redirect()->back()->with('error', 'The exam has been locked by the tutor in charge.');
-                    }
-
-                    // Update login status to "logged in"
-                    $student->login_status = 1;
-                    $student->save();
-
-                    // Encode the admission number to handle slashes or special characters
-                    $encoded_admission_no = urlencode($admission_no);
-
+            }  
                     // Authentication successful, redirect to student dashboard with encoded admission number
-                    return redirect()->route('dashboard', ['id' => $studentId]);
-
-                default:
-                    return redirect()->back()->with('error', 'Invalid login status.');
-            }
+                    return redirect()->route('student-dashboard', ['id' => $studentId]);
 
         } catch (\Exception $e) {
             // Log any exceptions that occur

@@ -24,6 +24,8 @@ use App\Models\QuestionSetting;
 use Illuminate\Support\Facades\Session;
 use App\Models\Courses;
 use Carbon\Carbon;
+use App\Models\Material;
+use App\Models\CbtEvaluation;
 
 class DashboardController extends Controller
 {
@@ -56,6 +58,38 @@ class DashboardController extends Controller
 
         return view('dashboard.admin-dashboard', compact('students', 'users', 'departments', 'questions',
     'softwareVersion', 'collegeSetup'));
+    }
+
+    public function indexStudent($id)
+    {
+        $collegeSetup = CollegeSetup::first();
+        $softwareVersion = SoftwareVersion::first();          
+
+        $studentData = StudentAdmission::where('id', $id)
+                        //->where('department', $department)
+                        ->first();
+
+        $examSetting = ExamSetting::where('department', $studentData->department)
+        ->where('level', $studentData->level)
+        ->first();    
+
+        $materials = Material::where('programme', $studentData->department)
+        ->where('level', $studentData->level)
+        ->get();
+
+        $cbtAttempt = CbtEvaluation::where('studentno', $studentData->admission_no)
+        ->where('examstatus', 1)
+        ->get();
+
+        $cbtCompleted = CbtEvaluation::where('studentno', $studentData->admission_no)
+        ->where('examstatus', 2)
+        ->get();
+
+        $students = StudentAdmission::all();
+        $departments = Department::all();
+
+        return view('student.pages.student-dashboard', compact('softwareVersion', 'collegeSetup', 'studentData',
+    'examSetting', 'materials', 'students','departments','cbtAttempt', 'cbtCompleted'));
     }
 
     public function examSetting()
