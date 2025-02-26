@@ -3,7 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>E-Learning :: Dashboard</title>
+  <title>E-Learning :: Material</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="shortcut icon" href="{{ asset('/favicon.png') }}">
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -28,28 +30,39 @@
   <link rel="stylesheet" href="{{asset('dashboard/bower_components/bootstrap-daterangepicker/daterangepicker.css')}}">
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="{{asset('dashboard/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
-  <!-- fullCalendar -->
-  <link rel="stylesheet" href="{{asset('dashboard/bower_components/fullcalendar/dist/fullcalendar.min.css')}}">
-  <link rel="stylesheet" href="{{asset('dashboard/bower_components/fullcalendar/dist/fullcalendar.print.min.css')}}" media="print">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
+  <style>
+    .example-modal .modal {
+      position: relative;
+      top: auto;
+      bottom: auto;
+      right: auto;
+      left: auto;
+      display: block;
+      z-index: 1;
+    }
 
+    .example-modal .modal {
+      background: transparent !important;
+    }
+  </style>
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-  <link rel="stylesheet" href="{{ asset('css/tooltipster.bundle.min.css') }}" />
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
   <header class="main-header">
     <!-- Logo -->
-    <a href="{{route('student-dashboard', ['id' => $studentData->id])}}" class="logo">
+    <a href="{{route('admin-dashboard')}}" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <!-- <span class="logo-mini"><b>A</b>dmin</span> -->
+      <span class="logo-mini"></span>
       <!-- logo for regular state and mobile devices -->
       <span class="logo-lg"><img src="{{asset($collegeSetup->avatar)}}" alt="College Logo" width="30" height="30"> <b></b></span>
     </a>
@@ -58,6 +71,9 @@
       <!-- Sidebar toggle button-->
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
         <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
       </a>
 
       <div class="navbar-custom-menu">
@@ -116,7 +132,7 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
         
-        <li class="active">
+        <li>
           <a href="{{route('student-dashboard', ['id' => $studentData->id])}}">
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
             <span class="pull-right-container">
@@ -124,7 +140,7 @@
             </span>
           </a>          
         </li>
-        <li>
+        <li class="active">
           <a href="{{route('student-course-material', ['id' => $studentData->id])}}">
             <i class="fa fa-share"></i> <span>Course Materials</span>
             <span class="pull-right-container">
@@ -159,14 +175,48 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Dashboard        
+        Course Materials
+       <small><h4></h4></small>        
       </h1>
       <ol class="breadcrumb">
-        <li><a href="{{route('student-dashboard', ['id' => $studentData->id])}}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Dashboard</li>
+        <li><a href="{{route('student-dashboard', ['id' => $studentData->id])}}"><i class="fa fa-dashboard"></i> Home</a></li>        
+        <li class="active">Course Material</li>
       </ol>
     </section>
-    @if(session('success'))
+
+    <!-- Main content -->
+    <section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title"></h3>
+              <!-- <a href="{{route('material-add')}}" class="btn btn-primary">Add Course Material</a> -->
+              <div class="box-tools">
+                <div class="input-group input-group-sm" style="width: 150px;">
+                <!-- <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-success">
+                Add Course Material
+              </button> -->
+                </div>
+              </div>
+              
+              <div class="box-header">
+              <h3 class="box-title"></h3>
+              
+              <div class="box-tools">
+              <!-- <form action="{{ route('search') }}" method="post" class="form-inline">
+                @csrf
+                <div class="input-group input-group-sm" style="width: 300px;">
+                    <input type="text" name="search" class="form-control pull-right" placeholder="Search">
+
+                    <div class="input-group-btn">
+                    <button type="submit" class="btn btn-success">Search</button>
+                    </div>
+                </div>
+            </form> -->
+              </div>
+              <hr>
+              @if(session('success'))
 						<div class="alert alert-success">
 							{{ session('success') }}
 						</div>
@@ -174,111 +224,94 @@
 						<div class="alert alert-danger">
 							{{ session('error') }}
 						</div>
-						@endif	
-    <!-- Main content -->
-    <section class="content">
-      <!-- Small boxes (Stat box) -->
-      <div class="row">
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-aqua">
-            <div class="inner">
-              <h3>{{$materials->count()}}</h3>
-
-              <p>Course Materials</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-bag"></i>
-            </div>
-            <a href="" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-green">
-            <div class="inner">
-              <h3>{{$cbtCompleted->count()}}<sup style="font-size: 20px"></sup></h3>
-
-              <p>Cbt Exam Completed</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-yellow">
-            <div class="inner">
-              <h3>{{$cbtAttempt->count()}}</h3>
-
-              <p>Cbt Exam Attempted</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-person-add"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-red">
-            <div class="inner">
-              <h3>{{$departments->count()}}</h3>
-
-              <p>Programmes</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-pie-graph"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-      </div>
-      <!-- /.row -->
-    </section>
-    <!-- /.content -->
-
-     <!-- Main content -->
-     <section class="content">
-      <div class="row">
-        <div class="col-md-3">
-          <div class="box box-solid">
-            <div class="box-header with-border">
-              <h4 class="box-title"></h4>
-            </div>
-            <div class="box-body">            
-              <div id="external-events">
-                <div class="external-event bg-light-blue">Exam Date</div> 
-              </div>
-            </div>
-           
-          </div>
-          <!-- /. box -->
-         
-        </div>
-        <!-- /.col -->
-        <div class="col-md-9">
-          <div class="box box-primary">
-            <div class="box-body no-padding">
-              <!-- THE CALENDAR -->
-              <div id="calendar"></div>
+						@endif
+          
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+                <tr>
+                  <th>#</th>
+                  <th>Semester</th>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>File Size</th>                  
+                  <th>Actions</th>                  
+                </tr>
+                @if ($allMaterials->count() > 0)
+                @foreach ($allMaterials as $key => $rs)
+                @php
+                    $videoExtensions = ['mp4', 'avi', 'flv', 'mkv', 'mov', 'wmv', 'mpg', 'webm', 'ogv'];
+                    $fileExtension = pathinfo($rs->content, PATHINFO_EXTENSION);
+                @endphp
+                <tr>
+                    <td>{{ $key + 1 }}</td>
+                    <td>{{$rs->semester}}</td>
+                    <td>{{ $rs->title }}</td>
+                    <td>{{ $rs->type }}</td>
+                    <td>
+                        @if(in_array($fileExtension, $videoExtensions))
+                            {{ $rs->file_size }} KB
+                        @endif
+                    </td> 
+                    @if($rs->type == 'video')                  
+                    <td> <a class="label label-primary" 
+                    href="{{route('course-material', ['id' => $rs->id , 'studentId' => $studentData->id])}}"><i class="fas fa-play-circle"></i>  Watch</a>                 
+                    </td>
+                    @else
+                    <td> <a class="label label-success" 
+                    href="{{route('course-material', ['id' => $rs->id , 'studentId' => $studentData->id])}}"><i class="fas fa-file-alt"></i>  View</a>                 
+                    </td>
+                    @endif
+                <td></td>
+                </tr>
+                @endforeach
+                @else
+		<tr>
+			<td colspan="8">Course Materials not available.</td>
+		</tr>
+        @endif
+              </table>
+              {{ $allMaterials->links() }}
             </div>
             <!-- /.box-body -->
           </div>
-          <!-- /. box -->
+          <!-- /.box -->
         </div>
-        <!-- /.col -->
       </div>
-      <!-- /.row -->
     </section>
     <!-- /.content -->
   </div>
+
+  <div class="modal modal-info fade" id="modal-success">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Import Student List.</h4>
+              </div>
+              <div class="modal-body">
+                <p>Importing students from a CSV (Comma Separated Values) file is a convenient way to bulk upload questions into a system. 
+                Here's how the process typically works:
+                </p>
+                  <ul>
+                    <li> Select the necessary criteria.</li>
+                    <li> Load the CSV file <a class="btn btn-success" href="{{route('download-student-csv')}}">You can download a sample template here.</a></li>
+                    <li> Click on import.</li>
+                    <li> This will upload all students for the specified criteria.</li>
+                    <li> You can edit each student as desired.</li>
+                  </ul> 
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                <a href="{{route('student-import')}}" class="btn btn-outline">Proceed</a>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
@@ -520,84 +553,5 @@
 <script src="{{asset('dashboard/dist/js/pages/dashboard.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('dashboard/dist/js/demo.js')}}"></script>
-<!-- fullCalendar -->
-<script src="{{asset('dashboard/bower_components/moment/moment.js')}}"></script>
-<script src="{{asset('dashboard/bower_components/fullcalendar/dist/fullcalendar.min.js')}}"></script>
-<!-- Page specific script -->
-
-<script>
-    $(function () {
-        /* Initialize the calendar */
-        var date = new Date();
-        var d = date.getDate(),
-            m = date.getMonth(),
-            y = date.getFullYear();
-
-        // Function to fetch exam dates from the server
-        function fetchExamDates() {
-            return $.ajax({
-                url: '/exam-dates',
-                method: 'GET',
-                dataType: 'json'
-            });
-        }
-
-        // Fetch exam dates and initialize the calendar
-        fetchExamDates().done(function(examDates) {
-            $('#calendar').fullCalendar({
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
-                buttonText: {
-                    today: 'today',
-                    month: 'month',
-                    week: 'week',
-                    day: 'day'
-                },
-                events: examDates,
-                editable: true,
-                droppable: true,
-                eventRender: function(event, element) {
-                    // Add Tooltipster to each event
-                    element.tooltipster({
-                        content: $(`
-                            <div>
-                                <strong>${event.title}</strong><br>
-                                ${event.description}
-                            </div>
-                        `),
-                        theme: 'tooltipster-light',
-                        interactive: true,
-                        delay: 100
-                    });
-                },
-                drop: function (date, allDay) {
-                    var originalEventObject = $(this).data('eventObject');
-                    var copiedEventObject = $.extend({}, originalEventObject);
-                    copiedEventObject.start = date;
-                    copiedEventObject.allDay = allDay;
-                    copiedEventObject.backgroundColor = $(this).css('background-color');
-                    copiedEventObject.borderColor = $(this).css('border-color');
-                    $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-                    if ($('#drop-remove').is(':checked')) {
-                        $(this).remove();
-                    }
-                }
-            });
-            
-            // Initialize Tooltipster
-            $('.fc-event').tooltipster({
-                theme: 'tooltipster-light',
-                interactive: true,
-                delay: 100
-            });
-        }).fail(function() {
-            // alert('Exam date has not beet set.');
-        });
-    });
-</script>
-<script src="{{ asset('js/tooltipster.bundle.min.js') }}"></script>
 </body>
 </html>

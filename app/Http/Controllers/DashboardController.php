@@ -868,6 +868,29 @@ class DashboardController extends Controller
         return response()->json($examDates);
     }
 
+    public function getStudentExamDates()
+    {
+
+        // Fetch exam dates from the QuestionSetting model
+        $examDates = QuestionSetting::select('department', 'course', 'exam_date','exam_mode')
+            ->get()
+            ->map(function($exam) {
+                // Format the exam date using Carbon
+                $formattedDate = Carbon::parse($exam->exam_date)->format('F j, Y');
+
+                return [
+                    'title' => "{$exam->department} - {$exam->course}",
+                    'start' => $exam->exam_date,
+                    'backgroundColor' => '#3c8dbc', // You can customize the color as needed
+                    'borderColor' => '#3c8dbc', // You can customize the color as needed
+                    'description' => "Date: {$formattedDate}<br>Time: 8:00am <br>Venue: ICT 
+                    <br>Department: {$exam->department}<br>Course: {$exam->course}<br>Exam Mode: {$exam->exam_mode}"
+                ];
+            });
+
+        return response()->json($examDates);
+    }
+
     public function deactivateUser($id)
     {
         //--Check for permission---
@@ -1034,6 +1057,91 @@ class DashboardController extends Controller
         } else {
             // If the password is incorrect, redirect back with an error message
             return redirect()->back()->with('error', 'Invalid password. Please try again.');
+        }
+    }
+
+    public function courseMaterial($id)
+    {
+        $collegeSetup = CollegeSetup::first();
+        $softwareVersion = SoftwareVersion::first();
+        $studentData = StudentAdmission::where('id', $id)->first();
+        $allMaterials = Material::where('programme' , $studentData->department)
+        ->where('level', $studentData->level)
+        ->paginate(10);
+
+        return view('student.pages.course-material', compact('allMaterials','studentData'
+    ,'collegeSetup', 'softwareVersion'));
+    }
+
+    public function courseMaterialView($id, $studentId)
+    {
+        $collegeSetup = CollegeSetup::first();
+        $softwareVersion = SoftwareVersion::first();
+        $studentData = StudentAdmission::where('id', $studentId)->first();
+
+        $material = Material::where('id', $id)->first();
+
+        return view('student.pages.course-material-view', compact('material', 'softwareVersion', 'collegeSetup'
+    , 'studentData'));
+    }
+
+    public function studentCbt($id)
+    {
+        try {   
+            // Attempt to find the student using the admission number and department
+            $student = StudentAdmission::where('id', $id)
+                ->first();
+
+            // Check if student exists
+            if (!$student) {
+                // If student doesn't exist, return error
+                return redirect()->back()->with('error', 'Invalid admission number or department');                 
+            }
+
+            // Fetch login status
+            $loginStatus = $student->login_status;
+
+            // Check login status
+            switch ($loginStatus) {
+                case 1:
+                    return redirect()->back()->with('error', 'You are already logged in.');
+
+                case 2:
+                    return redirect()->back()->with('error', 'You have completed the test.');
+
+                case 0:
+                    // Check if the exam is available
+                    $examSetting = ExamSetting::where('department', $student->department)
+                        ->where('level', $student->level)
+                        ->first();
+
+                    // If no exam is available for the student’s department/level
+                    if (!$examSetting) {
+                        return redirect()->back()->with('error', 'The exam is not available.');
+                    }
+
+                    // Check if the exam has been locked
+                    if ($examSetting->lock_status == 1) {
+                        return redirect()->back()->with('error', 'The exam has been locked by the tutor in charge.');
+                    }
+
+                    // Update login status to "logged in"
+                    $student->login_status = 1;
+                    $student->save();                  
+
+                    // Authentication successful, redirect to student dashboard with encoded admission number
+                    return redirect()->route('dashboard', ['id' => $id]);
+
+                default:
+                    return redirect()->back()->with('error', 'Invalid login status.');
+            }
+
+        } catch (\Exception $e) {
+            // Log any exceptions that occur
+            Log::error('Error during student login: ' . $e->getMessage());
+
+            // Redirect back with an error message
+            return redirect()->back()->with('error', 'An error occurred. Please try again later.');
         }
     }
 

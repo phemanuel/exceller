@@ -55,6 +55,12 @@ Route::get('/', function () {
     ->name('student-dashboard'); 
     Route::get('user-dashboard/{id}', [DashboardController::class, 'index'])
     ->name('dashboard');
+    Route::get('student/course/material/{id}', [DashboardController::class, 'courseMaterial'])
+    ->name('student-course-material'); 
+    Route::get('course/material/{id}/{studentId}', [DashboardController::class, 'courseMaterialView'])
+    ->name('course-material');
+    Route::get('student/cbt/{id}', [DashboardController::class, 'studentCbt'])
+    ->name('student-cbt'); 
     // ->middleware(StudentAuth::class);  
     //----Computer Based Test--------
     Route::post('cbt/{id}', [ExamController::class, 'cbtCheck'])
@@ -370,6 +376,8 @@ Route::get('/', function () {
         ->name('result-search'); 
         Route::get('/exam-dates', [DashboardController::class, 'getExamDates'])
         ->name('exam-dates');
+        Route::get('student/exam-dates', [DashboardController::class, 'getStudentExamDates'])
+        ->name('student-exam-dates');
         //--create users
         Route::get('users', [DashboardController::class, 'Users'])
         ->name('users'); 
