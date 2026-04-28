@@ -136,9 +136,9 @@
 
                 <!-- STUDENT PREVIEW -->
                 <li class="nav-item">
-                    <a href="{{ route('admin.student.preview') }}"
-                       class="nav-link {{ request()->routeIs('admin.student.*') ? 'active' : '' }}">
-                        <i class="fa-solid fa-user-graduate"></i> Student View
+                    <a href="{{ route('students.home') }}"
+                       class="nav-link {{ request()->routeIs('students.home.*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-user-graduate"></i> Student Management
                     </a>
                 </li>
 

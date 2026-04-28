@@ -18,6 +18,7 @@ use App\Http\Controllers\MCQController;
 use App\Http\Controllers\ExaminerController;
 use App\Http\Controllers\OSCEStudentController;
 use App\Http\Controllers\StudentExamController;
+use App\Http\Controllers\StudentLmsController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseModuleController;
 use App\Http\Controllers\CourseMaterialController;
@@ -539,9 +540,21 @@ Route::get('/', function () {
             | 👨‍🎓 STUDENT PREVIEW (keep for admin testing)
             |--------------------------------------------------------------------------
             */
-            Route::get('/student-view', function () {
-                return view('admin.student.preview');
-            })->name('admin.student.preview');
+            Route::prefix('/students')->group(function () {
+
+                Route::get('/', [StudentLmsController::class, 'index'])
+                    ->name('students.home');
+
+                Route::get('/create', [StudentLmsController::class, 'create'])
+                    ->name('students.create');
+
+                Route::post('/', [StudentLmsController::class, 'store'])
+                    ->name('students.store');
+
+                Route::post('/import', [StudentLmsController::class, 'import'])
+                    ->name('students.import');
+
+            });
 
             /*
             |--------------------------------------------------------------------------
