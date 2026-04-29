@@ -10,7 +10,7 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
             background: #f5f7fb;
@@ -97,7 +97,25 @@
             color: #888;
         }
     </style>
+<style>
+   /* Fix tab visibility */
+.nav-tabs .nav-link {
+    color: #333 !important;   /* dark text for inactive tabs */
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
 
+.nav-tabs .nav-link.active {
+    background-color: #0d6efd;
+    color: #fff !important;
+    border-color: #0d6efd;
+}
+
+/* Optional hover effect */
+.nav-tabs .nav-link:hover {
+    color: #0d6efd !important;
+}
+</style>
     @stack('styles')
 </head>
 <body>

@@ -14,9 +14,9 @@
                 + Add Student
             </button>
 
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importStudentModal">
+            <!-- <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importStudentModal">
                 Import Excel
-            </button>
+            </button> -->
 
         </div>
 
@@ -48,7 +48,7 @@
                         <td>
                             <img src="{{ $student->picture_name
                                     ? asset('storage/students/' . $student->picture_name)
-                                    : asset('images/blank.png') }}"
+                                    : asset('storage/students/blank.jpg') }}"
                                  width="40"
                                  height="40"
                                  class="rounded-circle">
@@ -102,70 +102,215 @@
 </div>
 
 <div class="modal fade" id="addStudentModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
 
-            <form method="POST"
-                  action="{{ route('students.store') }}"
-                  enctype="multipart/form-data">
+            <!-- HEADER -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fa fa-user-plus"></i> Student Management
+                </h5>
+                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
 
-                @csrf
+            <!-- TABS -->
+            <div class="modal-body">
 
-                <div class="modal-header">
-                    <h5>Add Student</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
+               <ul class="nav nav-tabs mb-3" id="studentTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active"
+                id="add-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#addStudentPane"
+                type="button">
+            ➕ Add Student
+        </button>
+    </li>
 
-                <div class="modal-body">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link"
+                id="import-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#importStudentPane"
+                type="button">
+            📥 Import Excel
+        </button>
+    </li>
+</ul>
 
-                    <div class="row">
+                <div class="tab-content">
 
-                        <div class="col-md-4">
-                            <input type="text" name="admission_no" class="form-control mb-2" placeholder="Admission No">
-                            <input type="text" name="surname" class="form-control mb-2" placeholder="Surname">
-                            <input type="text" name="first_name" class="form-control mb-2" placeholder="First Name">
-                            <input type="text" name="other_name" class="form-control mb-2" placeholder="Other Name">
-                        </div>
+                    <!-- ========================= -->
+                    <!-- SINGLE STUDENT -->
+                    <!-- ========================= -->
+                    <div class="tab-pane fade show active"
+                    id="addStudentPane"
+                    role="tabpanel">
 
-                        <div class="col-md-4">
-                            <input type="text" name="department" class="form-control mb-2" placeholder="Department">
-                            <input type="text" name="phone_no" class="form-control mb-2" placeholder="Phone No">
+                        <form method="POST"
+                              action="{{ route('students.store') }}"
+                              enctype="multipart/form-data">
 
-                            <select name="level" class="form-control mb-2">
-                                <option>100</option>
-                                <option>200</option>
-                                <option>300</option>
-                                <option>NDI</option>
-                                <option>NDII</option>
-                                <option>HNDI</option>
-                                <option>HNDII</option>
-                            </select>
+                            @csrf
 
-                            <select name="sex" class="form-control mb-2">
-                                <option>Male</option>
-                                <option>Female</option>
-                            </select>
-                        </div>
+                            <div class="row">
 
-                        <div class="col-md-4">
+                                <!-- PERSONAL INFO -->
+                                <div class="col-md-4">
+                                    <div class="card p-3 mb-3 shadow-sm">
+                                        <h6 class="text-muted">Personal Info</h6>
 
-                            <input type="text" name="state" class="form-control mb-2" placeholder="State">
-                            <input type="text" name="session1" class="form-control mb-2" placeholder="Session">
+                                        <input type="text" name="admission_no"
+                                               class="form-control mb-2"
+                                               placeholder="Admission No" required>
 
-                            <label>Picture</label>
-                            <input type="file" name="picture" class="form-control">
+                                        <input type="text" name="surname"
+                                               class="form-control mb-2"
+                                               placeholder="Surname" required>
 
-                        </div>
+                                        <input type="text" name="first_name"
+                                               class="form-control mb-2"
+                                               placeholder="First Name" required>
+
+                                        <input type="text" name="other_name"
+                                               class="form-control"
+                                               placeholder="Other Name">
+                                    </div>
+                                </div>
+
+                                <!-- ACADEMIC INFO -->
+                                <div class="col-md-4">
+                                    <div class="card p-3 mb-3 shadow-sm">
+                                        <h6 class="text-muted">Academic Info</h6>
+
+                                        <!-- PROGRAMME -->
+                                        <select name="department"
+                                                class="form-control mb-2"
+                                                required>
+                                            <option value="">Select Programme</option>
+                                            @foreach($programmes as $programme)
+                                                <option value="{{ $programme->programme }}">
+                                                    {{ $programme->programme }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+
+                                        <select name="level" class="form-control mb-2">
+                                            <option value="">Select Level</option>
+                                            <option>100</option>
+                                            <option>200</option>
+                                            <option>300</option>
+                                            <option>NDI</option>
+                                            <option>NDII</option>
+                                            <option>HNDI</option>
+                                            <option>HNDII</option>
+                                        </select>
+
+                                        <select name="sex" class="form-control">
+                                            <option value="">Gender</option>
+                                            <option>Male</option>
+                                            <option>Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- CONTACT & OTHER -->
+                                <div class="col-md-4">
+                                    <div class="card p-3 mb-3 shadow-sm">
+                                        <h6 class="text-muted">Contact & Other</h6>
+
+                                        <input type="text" name="phone_no"
+                                               class="form-control mb-2"
+                                               placeholder="Phone Number" required>
+
+                                        <input type="text" name="state"
+                                               class="form-control mb-2"
+                                               placeholder="State">
+
+                                        <select name="session1" class="form-control mb-2">
+                                            <option value="">Select Session</option>
+
+                                            @php
+                                                $startYear = 2020;
+                                                $currentYear = now()->year;
+
+                                                for ($year = $startYear; $year <= $currentYear; $year++) {
+                                                    $next = $year + 1;
+                                                    echo "<option value='{$year}/{$next}'>{$year}/{$next}</option>";
+                                                }
+                                            @endphp
+
+                                        </select>
+
+                                        <label class="small text-muted">Student Photo</label>
+                                        <input type="file" name="picture" class="form-control">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="text-end">
+                                <button class="btn btn-primary px-4">
+                                    <i class="fa fa-save"></i> Save Student
+                                </button>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                    <!-- ========================= -->
+                    <!-- IMPORT STUDENTS -->
+                    <!-- ========================= -->
+                    <div class="tab-pane fade"
+                    id="importStudentPane"
+                    role="tabpanel">
+
+                        <form method="POST"
+                              action="{{ route('students.import') }}"
+                              enctype="multipart/form-data">
+
+                            @csrf
+
+                            <div class="card p-4 shadow-sm">
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <h6 class="text-muted mb-0">Upload Excel File</h6>
+
+    <a href="{{ route('students.sample') }}"
+       class="btn btn-sm btn-outline-primary">
+        <i class="fa fa-download"></i> Download Sample
+    </a>
+
+</div>
+                                <input type="file"
+                                       name="file"
+                                       class="form-control mb-3"
+                                       required>
+
+                                <div class="alert alert-info small">
+                                    Expected columns:
+                                    <br>
+                                    admission_no, surname, first_name, other_name,
+                                    department, phone_no, state, level, sex, session1
+                                </div>
+
+                                <div class="text-end">
+                                    <button class="btn btn-success px-4">
+                                        <i class="fa fa-upload"></i> Import Students
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </form>
 
                     </div>
 
                 </div>
 
-                <div class="modal-footer">
-                    <button class="btn btn-primary">Save</button>
-                </div>
-
-            </form>
+            </div>
 
         </div>
     </div>
@@ -178,18 +323,16 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <form method="POST"
+                <div class="modal-header">
+                    <h5>Edit Student</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+<form method="POST"
                   action="{{ route('students.update', $student) }}"
                   enctype="multipart/form-data">
 
                 @csrf
                 @method('PUT')
-
-                <div class="modal-header">
-                    <h5>Edit Student</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
                 <div class="modal-body">
 
                     <div class="row">

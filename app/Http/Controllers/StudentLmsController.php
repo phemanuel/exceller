@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\StudentAdmission;
+use App\Models\CourseStudyAll;
 
 class StudentLmsController extends Controller
 {
@@ -24,8 +25,9 @@ class StudentLmsController extends Controller
         }
 
         $students = $query->latest()->paginate(20);
+        $programmes = CourseStudyAll::All();
 
-        return view('admin.students.index', compact('students'));
+        return view('admin.students.index', compact('students','programmes'));
     }
 
     /*
@@ -111,4 +113,13 @@ class StudentLmsController extends Controller
 
         return back()->with('success', 'Student deleted successfully');
     }
+
+    public function downloadSample()
+    {
+        $filePath = public_path('samples/student_sample.xlsx');
+
+        return response()->download($filePath);
+    }
+
+    
 }

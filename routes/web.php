@@ -554,6 +554,9 @@ Route::get('/', function () {
                 Route::post('/import', [StudentLmsController::class, 'import'])
                     ->name('students.import');
 
+                Route::get('/students/sample', [StudentLmsController::class, 'downloadSample'])
+                ->name('students.sample');
+
             });
 
             /*
