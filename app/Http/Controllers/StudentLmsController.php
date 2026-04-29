@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\StudentAdmission;
 use App\Models\CourseStudyAll;
+use Illuminate\Support\Facades\Hash;
+
 
 class StudentLmsController extends Controller
 {
@@ -18,16 +20,22 @@ class StudentLmsController extends Controller
     {
         $query = StudentAdmission::query();
 
-        if ($request->search) {
-            $query->where('admission_no', 'like', "%{$request->search}%")
-                  ->orWhere('first_name', 'like', "%{$request->search}%")
-                  ->orWhere('surname', 'like', "%{$request->search}%");
+        if ($request->filled('search')) {
+
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('admission_no', 'like', "%{$search}%")
+                ->orWhereRaw("CONCAT(first_name, ' ', surname) LIKE ?", ["%{$search}%"])
+                ->orWhere('phone_no', 'like', "%{$search}%");
+            });
         }
 
-        $students = $query->latest()->paginate(20);
-        $programmes = CourseStudyAll::All();
+        $students = $query->latest()->paginate(20)->withQueryString();
 
-        return view('admin.students.index', compact('students','programmes'));
+        $programmes = CourseStudyAll::all();
+
+        return view('admin.students.index', compact('students', 'programmes'));
     }
 
     /*
@@ -38,12 +46,23 @@ class StudentLmsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'admission_no' => 'required|unique:students',
-            'phone_no' => 'required',
+            'admission_no' => 'required|string|max:50|unique:student_admissions,admission_no',
+
+            'surname'      => 'required|string|max:100',
+            'first_name'   => 'required|string|max:100',
+            'other_name'   => 'nullable|string|max:100',
+            'department'   => 'required|string|max:150',
+            'phone_no'     => 'required|string|max:20',
+            'state'        => 'nullable|string|max:100',
+            'level'        => 'required|in:100,200,300,NDI,NDII,HNDI,HNDII',
+            'sex'          => 'required|in:Male,Female',
+            'session1'     => 'required|string|max:20',
+            // OPTIONAL IMAGE
+            'picture'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         // 📸 HANDLE IMAGE
-        $pictureName = 'blank.png';
+        $pictureName = 'blank';
 
         if ($request->hasFile('picture')) {
 
@@ -51,7 +70,13 @@ class StudentLmsController extends Controller
 
             $pictureName = $request->admission_no . '_' . time() . '.' . $file->getClientOriginalExtension();
 
-            $file->storeAs('students', $pictureName, 'public');
+            $destination = public_path('uploads/students');
+
+            if (!file_exists($destination)) {
+                mkdir($destination, 0777, true);
+            }
+
+            $file->move($destination, $pictureName);
         }
 
         StudentAdmission::create([
@@ -75,7 +100,7 @@ class StudentLmsController extends Controller
             'password' => Hash::make($request->phone_no),
         ]);
 
-        return back()->with('success', 'Student created successfully');
+        return redirect()->route('students.home')->with('success', 'Student created successfully');
     }
 
     /*

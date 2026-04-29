@@ -31,6 +31,23 @@ class StudentAdmission extends Model
         'login_attempts',
     ];
 
+    public function getPhotoAttribute()
+    {
+        $default = asset('uploads/blank.jpg');
+
+        if (!$this->picture_name) {
+            return $default;
+        }
+
+        $path = 'uploads/' . $this->picture_name;
+
+        if (!file_exists(public_path($path))) {
+            return $default;
+        }
+
+        return asset($path);
+    }
+
     public function examinerScores()
     {
         return $this->hasMany(ExaminerScore::class);

@@ -549,7 +549,7 @@ Route::get('/', function () {
                     ->name('students.create');
 
                 Route::post('/', [StudentLmsController::class, 'store'])
-                    ->name('students.store');
+                    ->name('students.save');
 
                 Route::post('/import', [StudentLmsController::class, 'import'])
                     ->name('students.import');

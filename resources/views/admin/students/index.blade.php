@@ -47,8 +47,8 @@
 
                         <td>
                             <img src="{{ $student->picture_name
-                                    ? asset('storage/students/' . $student->picture_name)
-                                    : asset('storage/students/blank.jpg') }}"
+                                    ? asset('uploads/' . $student->picture_name . '.jpg')
+                                    : asset('uploads/blank.jpg') }}"
                                  width="40"
                                  height="40"
                                  class="rounded-circle">
@@ -148,7 +148,7 @@
                     role="tabpanel">
 
                         <form method="POST"
-                              action="{{ route('students.store') }}"
+                              action="{{ route('students.save') }}"
                               enctype="multipart/form-data">
 
                             @csrf
@@ -320,65 +320,145 @@
 @foreach($students as $student)
 
 <div class="modal fade" id="editStudentModal-{{ $student->id }}" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
 
-                <div class="modal-header">
-                    <h5>Edit Student</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-<form method="POST"
+            <!-- HEADER -->
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">
+                    <i class="fa fa-edit"></i> Edit Student
+                </h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form method="POST"
                   action="{{ route('students.update', $student) }}"
                   enctype="multipart/form-data">
 
                 @csrf
                 @method('PUT')
+
                 <div class="modal-body">
 
                     <div class="row">
 
+                        <!-- ===================== -->
+                        <!-- PERSONAL INFO -->
+                        <!-- ===================== -->
                         <div class="col-md-4">
-                            <input type="text" name="admission_no" class="form-control mb-2"
-                                   value="{{ $student->admission_no }}">
+                            <div class="card p-3 shadow-sm mb-3">
+                                <h6 class="text-muted">Personal Info</h6>
 
-                            <input type="text" name="surname" class="form-control mb-2"
-                                   value="{{ $student->surname }}">
+                                <input type="text" name="admission_no"
+                                       class="form-control mb-2"
+                                       value="{{ $student->admission_no }}" required>
 
-                            <input type="text" name="first_name" class="form-control mb-2"
-                                   value="{{ $student->first_name }}">
+                                <input type="text" name="surname"
+                                       class="form-control mb-2"
+                                       value="{{ $student->surname }}" required>
+
+                                <input type="text" name="first_name"
+                                       class="form-control mb-2"
+                                       value="{{ $student->first_name }}" required>
+
+                                <input type="text" name="other_name"
+                                       class="form-control"
+                                       value="{{ $student->other_name }}">
+                            </div>
                         </div>
 
+                        <!-- ===================== -->
+                        <!-- ACADEMIC INFO -->
+                        <!-- ===================== -->
                         <div class="col-md-4">
+                            <div class="card p-3 shadow-sm mb-3">
+                                <h6 class="text-muted">Academic Info</h6>
 
-                            <input type="text" name="department" class="form-control mb-2"
-                                   value="{{ $student->department }}">
+                                <!-- PROGRAMME -->
+                                <select name="department" class="form-control mb-2" required>
+                                    <option value="">Select Programme</option>
+                                    @foreach($programmes as $programme)
+                                        <option value="{{ $programme->programme }}"
+                                            {{ $student->department == $programme->programme ? 'selected' : '' }}>
+                                            {{ $programme->programme }}
+                                        </option>
+                                    @endforeach
+                                </select>
 
-                            <input type="text" name="phone_no" class="form-control mb-2"
-                                   value="{{ $student->phone_no }}">
+                                <!-- LEVEL -->
+                                <select name="level" class="form-control mb-2">
+                                    @foreach(['100','200','300','NDI','NDII','HNDI','HNDII'] as $lvl)
+                                        <option value="{{ $lvl }}"
+                                            {{ $student->level == $lvl ? 'selected' : '' }}>
+                                            {{ $lvl }}
+                                        </option>
+                                    @endforeach
+                                </select>
 
-                            <input type="text" name="state" class="form-control mb-2"
-                                   value="{{ $student->state }}">
-
+                                <!-- SEX -->
+                                <select name="sex" class="form-control">
+                                    <option value="Male" {{ $student->sex == 'Male' ? 'selected' : '' }}>Male</option>
+                                    <option value="Female" {{ $student->sex == 'Female' ? 'selected' : '' }}>Female</option>
+                                </select>
+                            </div>
                         </div>
 
+                        <!-- ===================== -->
+                        <!-- CONTACT & OTHER -->
+                        <!-- ===================== -->
                         <div class="col-md-4">
+                            <div class="card p-3 shadow-sm mb-3">
+                                <h6 class="text-muted">Contact & Other</h6>
 
-                            <label>Change Picture</label>
-                            <input type="file" name="picture" class="form-control mb-2">
+                                <input type="text" name="phone_no"
+                                       class="form-control mb-2"
+                                       value="{{ $student->phone_no }}" required>
 
-                            <img src="{{ $student->picture_name
-                                ? asset('storage/students/' . $student->picture_name)
-                                : asset('images/blank.png') }}"
-                                width="80">
+                                <input type="text" name="state"
+                                       class="form-control mb-2"
+                                       value="{{ $student->state }}">
 
+                                <!-- SESSION DROPDOWN -->
+                                <select name="session1" class="form-control mb-2">
+                                    @php
+                                        $startYear = 2020;
+                                        $currentYear = now()->year;
+                                    @endphp
+
+                                    @for($year = $startYear; $year <= $currentYear; $year++)
+                                        @php $next = $year + 1; @endphp
+                                        <option value="{{ $year }}/{{ $next }}"
+                                            {{ $student->session1 == "$year/$next" ? 'selected' : '' }}>
+                                            {{ $year }}/{{ $next }}
+                                        </option>
+                                    @endfor
+                                </select>
+
+                                <!-- IMAGE -->
+                                <label class="small text-muted">Change Picture</label>
+                                <input type="file" name="picture" class="form-control mb-2">
+
+                                <div class="text-center">
+
+                                    <img src="{{ $student->picture_name
+                                        ? asset('uploads/' . $student->picture_name . '.jpg')
+                                        : asset('uploads/blank.jpg') }}"
+                                        width="80"
+                                        class="rounded-circle shadow-sm">
+
+                                </div>
+                            </div>
                         </div>
 
                     </div>
 
                 </div>
 
+                <!-- FOOTER -->
                 <div class="modal-footer">
-                    <button class="btn btn-primary">Update</button>
+                    <button class="btn btn-warning px-4">
+                        <i class="fa fa-save"></i> Update Student
+                    </button>
                 </div>
 
             </form>
