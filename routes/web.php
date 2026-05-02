@@ -24,6 +24,8 @@ use App\Http\Controllers\CourseModuleController;
 use App\Http\Controllers\CourseMaterialController;
 use App\Http\Controllers\TutorDashboardController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\ProgressAnalyticsController;
+use App\Http\Controllers\AdminSettingsController;
 
 /*
 /*
@@ -544,16 +546,16 @@ Route::get('/', function () {
 
                 Route::get('/', [StudentLmsController::class, 'index'])
                     ->name('students.home');
-
                 Route::get('/create', [StudentLmsController::class, 'create'])
                     ->name('students.create');
-
                 Route::post('/', [StudentLmsController::class, 'store'])
                     ->name('students.save');
-
+                Route::put('/student/{student}', [StudentLmsController::class, 'update'])
+                    ->name('students.update-rec');
                 Route::post('/import', [StudentLmsController::class, 'import'])
                     ->name('students.import');
-
+                Route::delete('/student/{student},', [StudentLmsController::class, 'delete'])
+                    ->name('students.delete');
                 Route::get('/students/sample', [StudentLmsController::class, 'downloadSample'])
                 ->name('students.sample');
 
@@ -564,16 +566,26 @@ Route::get('/', function () {
             | 📊 ANALYTICS
             |--------------------------------------------------------------------------
             */
-            Route::get('/analytics', [AdminDashboardController::class, 'analytics'])
+            Route::prefix('analytics')->group(function () {
+                Route::get('/', [ProgressAnalyticsController::class, 'index'])
                 ->name('admin.analytics');
+                Route::get('/students', [ProgressAnalyticsController::class, 'students'])
+                ->name('admin.analytics.students');
+                Route::get('/risk', [ProgressAnalyticsController::class, 'risk'])
+                ->name('admin.analytics.risk');
+            });
 
             /*
             |--------------------------------------------------------------------------
             | ⚙️ SETTINGS
             |--------------------------------------------------------------------------
             */
-            Route::get('/settings', [AdminDashboardController::class, 'settings'])
-                ->name('admin.settings');
+            Route::prefix('settings')->group(function () {
+                Route::get('/', [AdminSettingsController::class, 'index'])
+                ->name('admin.settings.index');
+                Route::post('/admin/settings/live-update', [AdminSettingsController::class, 'liveUpdate'])
+                ->name('admin.settings.live-update');
+            });
         });
                 
            

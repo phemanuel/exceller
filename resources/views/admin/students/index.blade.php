@@ -12,92 +12,114 @@
 
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentModal">
                 + Add Student
-            </button>
-
-            <!-- <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importStudentModal">
-                Import Excel
-            </button> -->
+            </button>          
 
         </div>
 
     </div>
+    <div class="card shadow-sm mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
 
-    <!-- TABLE -->
-    <div class="table-responsive">
+        <h5 class="mb-0">
+            <i class="bi bi-funnel"></i> Filters
+        </h5>
 
-        <table class="table table-bordered">
+        <div class="d-flex align-items-center gap-3">
+            <span class="badge bg-primary">
+                Total Students: {{ $students->total() }}
+            </span>
 
-            <thead class="table-dark">
-                <tr>
-                    <th>Photo</th>
-                    <th>Admission No</th>
-                    <th>Name</th>
-                    <th>Department</th>
-                    <th>Phone</th>
-                    <th>Level</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                @forelse($students as $student)
-
-                    <tr>
-
-                        <td>
-                            <img src="{{ $student->picture_name
-                                    ? asset('uploads/' . $student->picture_name . '.jpg')
-                                    : asset('uploads/blank.jpg') }}"
-                                 width="40"
-                                 height="40"
-                                 class="rounded-circle">
-                        </td>
-
-                        <td>{{ $student->admission_no }}</td>
-                        <td>{{ $student->surname }} {{ $student->first_name }}</td>
-                        <td>{{ $student->department }}</td>
-                        <td>{{ $student->phone_no }}</td>
-                        <td>{{ $student->level }}</td>
-
-                        <td class="d-flex gap-2">
-
-                            <!-- EDIT -->
-                            <button class="btn btn-sm btn-warning"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editStudentModal-{{ $student->id }}">
-                                <i class="fa fa-edit"></i>
-                            </button>
-
-                            <!-- DELETE -->
-                            <form method="POST"
-                                  action="{{ route('students.destroy', $student) }}"
-                                  onsubmit="return confirm('Delete student?')">
-
-                                @csrf
-                                @method('DELETE')
-
-                                <button class="btn btn-sm btn-danger">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-
-                            </form>
-
-                        </td>
-
-                    </tr>
-
-                @empty
-                    <tr>
-                        <td colspan="7" class="text-center">No students found</td>
-                    </tr>
-                @endforelse
-
-            </tbody>
-
-        </table>
+            <button class="btn btn-sm btn-outline-secondary"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#filterCollapse">
+                <i class="bi bi-chevron-down"></i>
+            </button>
+        </div>
 
     </div>
+
+    <div id="filterCollapse" class="collapse show">
+        <div class="card-body">
+
+            <form id="searchForm">
+                <div class="row g-3">
+
+                    <div class="col-md-3">
+                        <label><i class="bi bi-credit-card"></i> Admission No</label>
+                        <input type="text" name="admission_no" class="form-control">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label><i class="bi bi-person"></i> Surname</label>
+                        <input type="text" name="surname" class="form-control">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label><i class="bi bi-person-badge"></i> First Name</label>
+                        <input type="text" name="first_name" class="form-control">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label><i class="bi bi-person-lines-fill"></i> Other Name</label>
+                        <input type="text" name="other_name" class="form-control">
+                    </div>
+
+                    <!-- Programme -->
+                    <div class="col-md-3">
+                        <label><i class="bi bi-book"></i> Programme</label>
+                        <select name="programme" class="form-select select2">
+                            <option value="">Select Programme</option>
+                            @foreach($programmes as $programme)
+                                <option value="{{ $programme->name }}">
+                                    {{ $programme->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Level -->
+                    <div class="col-md-2">
+                        <label><i class="bi bi-bar-chart"></i> Level</label>
+                        <select name="level" class="form-select select2">
+                            <option value="">Level</option>
+                            @foreach(['100','200','300','NDI','NDII','HNDI','HNDII'] as $level)
+                                <option value="{{ $level }}">{{ $level }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Session -->
+                    <div class="col-md-3">
+                        <label><i class="bi bi-calendar"></i> Session</label>
+                        <select name="session1" class="form-select select2">
+                            <option value="">Session</option>
+                            @for($year = 2020; $year <= date('Y'); $year++)
+                                @php $session = $year . '/' . ($year + 1); @endphp
+                                <option value="{{ $session }}">{{ $session }}</option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 d-flex align-items-end gap-2">
+                        <button type="button" id="resetBtn" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-arrow-clockwise"></i> Reset
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="studentTable">
+    @include('admin.students.partials.student-table')
+</div>
+   <div class="mt-3">
+    {{ $students->links() }}
+</div>
 
 </div>
 
@@ -276,7 +298,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <h6 class="text-muted mb-0">Upload Excel File</h6>
+    <h6 class="text-muted mb-0"></h6>
 
     <a href="{{ route('students.sample') }}"
        class="btn btn-sm btn-outline-primary">
@@ -284,6 +306,20 @@
     </a>
 
 </div>
+<label>Academic Session</label>
+<select name="session1" class="form-control mb-2">
+                                    @php
+                                                $startYear = 2020;
+                                                $currentYear = now()->year;
+
+                                                for ($year = $startYear; $year <= $currentYear; $year++) {
+                                                    $next = $year + 1;
+                                                    echo "<option value='{$year}/{$next}'>{$year}/{$next}</option>";
+                                                }
+                                            @endphp
+                                </select>
+<hr>
+<label for="exampleInputEmail1">File (Excel/CSV Format)</label>
                                 <input type="file"
                                        name="file"
                                        class="form-control mb-3"
@@ -293,7 +329,7 @@
                                     Expected columns:
                                     <br>
                                     admission_no, surname, first_name, other_name,
-                                    department, phone_no, state, level, sex, session1
+                                    department, department1, phone_no, state, level, sex
                                 </div>
 
                                 <div class="text-end">
@@ -332,7 +368,7 @@
             </div>
 
             <form method="POST"
-                  action="{{ route('students.update', $student) }}"
+                  action="{{ route('students.update-rec', $student) }}"
                   enctype="multipart/form-data">
 
                 @csrf
@@ -439,12 +475,16 @@
                                 <input type="file" name="picture" class="form-control mb-2">
 
                                 <div class="text-center">
+                                @php
+                                    $imagePath = public_path('uploads/students/' . $student->picture_name . '.jpg');
+                                @endphp
 
-                                    <img src="{{ $student->picture_name
-                                        ? asset('uploads/' . $student->picture_name . '.jpg')
-                                        : asset('uploads/blank.jpg') }}"
-                                        width="80"
-                                        class="rounded-circle shadow-sm">
+                                <img src="{{ (!empty($student->picture_name) && file_exists($imagePath))
+                                            ? asset('uploads/students/' . $student->picture_name . '.jpg')
+                                            : asset('uploads/blank.jpg') }}"
+                                    width="40"    
+                                    class="rounded-circle shadow-sm">
+                                    
 
                                 </div>
                             </div>
@@ -466,6 +506,73 @@
         </div>
     </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
+    const form = document.getElementById("searchForm");
+    let timeout = null;
+    let controller = null; // for aborting requests
+
+    function fetchStudents() {
+
+        // Cancel previous request
+        if (controller) {
+            controller.abort();
+        }
+
+        controller = new AbortController();
+
+        let params = new URLSearchParams(new FormData(form));
+
+        fetch("{{ route('students.home') }}?" + params.toString(), {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            signal: controller.signal
+        })
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById("studentTable").innerHTML = data;
+        })
+        .catch(err => {
+            if (err.name !== 'AbortError') {
+                console.error(err);
+            }
+        });
+    }
+
+    // Debounced typing
+    form.querySelectorAll("input").forEach(input => {
+        input.addEventListener("keyup", () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(fetchStudents, 400);
+        });
+    });
+
+    // Dropdown change
+    form.querySelectorAll("select").forEach(select => {
+        select.addEventListener("change", fetchStudents);
+    });
+
+    // Reset
+    document.getElementById("resetBtn").addEventListener("click", () => {
+        form.reset();
+        $('.select2').val(null).trigger('change');
+        fetchStudents();
+    });
+
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('.select2').select2({
+        width: '100%',
+        placeholder: "Select option",
+        allowClear: true
+    });
+});
+</script>
 @endforeach
 @endsection

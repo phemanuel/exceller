@@ -11,6 +11,8 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         body {
             background: #f5f7fb;
@@ -161,13 +163,19 @@
                 </li>
 
                 <!-- ANALYTICS -->
+                @php
+                $isAnalyticsActive =
+                    request()->routeIs('admin.analytics') ||
+                    request()->routeIs('admin.analytics.students') ||
+                    request()->routeIs('admin.analytics.risk');
+                @endphp
+
                 <li class="nav-item">
                     <a href="{{ route('admin.analytics') }}"
-                       class="nav-link {{ request()->routeIs('admin.analytics') ? 'active' : '' }}">
-                        <i class="fa-solid fa-chart-line"></i> Progress
+                    class="nav-link {{ $isAnalyticsActive ? 'active' : '' }}">
+                        <i class="fa-solid fa-chart-line"></i> Progress Analytics
                     </a>
                 </li>
-
                 <!-- SETTINGS -->
                 <li class="nav-item">
                     <a href="{{ route('admin.settings') }}"
@@ -235,6 +243,7 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
 @stack('scripts')
 

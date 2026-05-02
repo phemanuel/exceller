@@ -57,4 +57,8 @@ class StudentAdmission extends Model
     {
         return $this->hasMany(StationResult::class);
     }
+    public function activities()
+    {
+        return $this->hasMany(StudentActivities::class, 'student_id');
+    }
 }
