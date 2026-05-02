@@ -306,7 +306,7 @@
         </li>
         <li>
           <a href="{{route('student-course-material', ['id' => $studentData->id])}}">
-            <i class="fa fa-share"></i> <span>Course Materials</span>
+            <i class="fa fa-share"></i> <span>LMS</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -365,7 +365,7 @@
             <div class="inner">
               <h3></h3>
 
-              <p>Course Materials</p>
+              <p>LMS</p>
             </div>
             <div class="icon">
               <i class="ion ion-bag"></i>

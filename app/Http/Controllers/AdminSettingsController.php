@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AdminSettings;
+use DateTimeZone;
+use Illuminate\Support\Facades\Auth;
 
 class AdminSettingsController extends Controller
 {
@@ -11,8 +13,9 @@ class AdminSettingsController extends Controller
     public function index()
     {
         $settings = AdminSettings::pluck('value', 'key');
+        $timezones = DateTimeZone::listIdentifiers();
 
-        return view('admin.settings.index', compact('settings'));
+        return view('admin.settings.index', compact('settings','timezones'));
     }
 
     public function update(Request $request)
@@ -35,14 +38,14 @@ class AdminSettingsController extends Controller
             'value' => 'nullable'
         ]);
 
-        \App\Models\AdminSettings::updateOrCreate(
+        AdminSettings::updateOrCreate(
             ['key' => $request->key],
             ['value' => $request->value]
         );
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Setting updated'
+            'message' => 'Updated successfully'
         ]);
     }
 }

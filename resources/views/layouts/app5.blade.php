@@ -178,35 +178,21 @@
                 </li>
                 <!-- SETTINGS -->
                 <li class="nav-item">
-                    <a href="{{ route('admin.settings') }}"
-                       class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
+                    <a href="{{ route('admin.settings.index') }}"
+                       class="nav-link {{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">
                         <i class="fa-solid fa-gear"></i> Settings
                     </a>
                 </li>
-
-                <!-- USER -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="fa-solid fa-user"></i>
-                        {{ auth()->user()->name ?? 'User' }}
+                <!-- Logout -->
+                <li class="nav-item">
+                    <a href="{{ route('admin-view') }}"
+                    class="nav-link text-danger"
+                    >
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        Logout
                     </a>
-
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a href="#" class="dropdown-item">
-                                <i class="fa-solid fa-user"></i> Profile
-                            </a>
-                        </li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button class="dropdown-item">
-                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
                 </li>
+                
 
             </ul>
         </div>

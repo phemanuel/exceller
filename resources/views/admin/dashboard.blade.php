@@ -8,7 +8,7 @@
 
         <div>
             <h2 class="fw-bold mb-1">Dashboard</h2>
-            <p class="text-muted mb-0">Welcome back 👋 Here’s what’s happening in your LMS</p>
+            <p class="text-muted mb-0">Welcome back <strong>{{ auth()->user()->name ?? 'User' }}</strong>👋 , here’s what’s happening in your LMS</p>
         </div>
 
         <div class="text-end">

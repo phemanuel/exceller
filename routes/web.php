@@ -26,6 +26,7 @@ use App\Http\Controllers\TutorDashboardController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ProgressAnalyticsController;
 use App\Http\Controllers\AdminSettingsController;
+use App\Http\Controllers\StudentDashboardController;
 
 /*
 /*
@@ -70,121 +71,127 @@ Route::get('/', function () {
 
     //--User routes
     Route::group(['middleware' => ['student.auth']], function () {
-       //-----Dashboard routes-----       
-    Route::get('student/dashboard/{id}', [DashboardController::class, 'indexStudent'])
-    ->name('student-dashboard'); 
-    Route::get('student/report/{id}', [ReportController::class, 'studentReport'])
-    ->name('student-report'); 
-    Route::get('user-dashboard/{id}', [DashboardController::class, 'index'])
-    ->name('dashboard');
-    Route::get('student/course/material/{id}', [DashboardController::class, 'courseMaterial'])
-    ->name('student-course-material'); 
-    Route::get('course/material/{id}/{studentId}', [DashboardController::class, 'courseMaterialView'])
-    ->name('course-material');
-    Route::get('student/cbt/{id}', [DashboardController::class, 'studentCbt'])
-    ->name('student-cbt'); 
-    // ->middleware(StudentAuth::class);  
-    //----Computer Based Test--------
-    Route::post('cbt/{id}', [ExamController::class, 'cbtCheck'])
-    ->name('cbt-check');
-    Route::get('cbt-process/{id}', [ExamController::class, 'cbtProcess'])
-    ->name('cbt-process');   
-    Route::get('cbt-page/{id}', [ExamController::class, 'cbtPage'])
-    ->name('cbt-page');
-    Route::get('cbt/{id}', [ExamController::class, 'cbtContinue'])
-    ->name('cbt-continue');    
-    //---Objective Module--------      
-    Route::get('cbt/{id}/page1', [ExamController::class, 'cbtPage1'])
-    ->name('cbt-page1');
-    Route::get('cbt/{id}/page2', [ExamController::class, 'cbtPage2'])
-    ->name('cbt-page2');
-    Route::get('cbt/{id}/page3', [ExamController::class, 'cbtPage3'])
-    ->name('cbt-page3');
-    Route::get('cbt/{id}/page4', [ExamController::class, 'cbtPage4'])
-    ->name('cbt-page4');
-    Route::get('cbt/{id}/page5', [ExamController::class, 'cbtPage5'])
-    ->name('cbt-page5');
-    Route::get('cbt/{id}/page6', [ExamController::class, 'cbtPage6'])
-    ->name('cbt-page6');
-    Route::get('cbt/{id}/page7', [ExamController::class, 'cbtPage7'])
-    ->name('cbt-page7');
-    Route::get('cbt/{id}/page8', [ExamController::class, 'cbtPage8'])
-    ->name('cbt-page8');
-    Route::get('cbt/{id}/page9', [ExamController::class, 'cbtPage9'])
-    ->name('cbt-page9');
-    Route::get('cbt/{id}/page10', [ExamController::class, 'cbtPage10'])
-    ->name('cbt-page10');     
-    //----Exam Sheet
-    Route::get('exam-sheet/{id}/Page1', [ReportController::class, 'examSheetPage01'])
-        ->name('exam-sheet-page01');
-        Route::get('exam-sheet/{id}/Page2', [ReportController::class, 'examSheetPage02'])
-        ->name('exam-sheet-page02');
-        Route::get('exam-sheet/{id}/Page3', [ReportController::class, 'examSheetPage03'])
-        ->name('exam-sheet-page03');
-        Route::get('exam-sheet/{id}/Page4', [ReportController::class, 'examSheetPage04'])
-        ->name('exam-sheet-page04');
-        Route::get('exam-sheet/{id}/Page5', [ReportController::class, 'examSheetPage05'])
-        ->name('exam-sheet-page05');
-        Route::get('exam-sheet/{id}/Page6', [ReportController::class, 'examSheetPage06'])
-        ->name('exam-sheet-page06');
-        Route::get('exam-sheet/{id}/Page7', [ReportController::class, 'examSheetPage07'])
-        ->name('exam-sheet-page07');
-        Route::get('exam-sheet/{id}/Page8', [ReportController::class, 'examSheetPage08'])
-        ->name('exam-sheet-page08');
-        Route::get('exam-sheet/{id}/Page9', [ReportController::class, 'examSheetPage09'])
-        ->name('exam-sheet-page09');
-        Route::get('exam-sheet/{id}/Page10', [ReportController::class, 'examSheetPage010'])
-        ->name('exam-sheet-page010');
-    //----Update Answers---
-    Route::get('fetch-answers/{id}/{pageNo}', [ExamController::class, 'fetchAnswers'])
-    ->name('fetch-answers');
-    Route::get('fetch-questions/{id}/{pageNo}', [ExamController::class, 'fetchQuestions'])
-    ->name('fetch-questions');
-    Route::post('update-answers/{id}/{pageNo}', [ExamController::class, 'updateAnswersForPage'])
-    ->name('update-answers');
-    // ----Single Questions
-    Route::get('get-question/{questionNumber}', [ExamController::class, 'getSingleQuestion'])
-    ->name('get-question');
-    Route::post('save-single-answer', [ExamController::class, 'saveSingleAnswer'])
-    ->name('save-single-answer');
-    Route::get('/get-attempted-questions', [ExamController::class, 'getAttemptedQuestions'])
-    ->name('get-attempted-questions');
-    //--Submit Test
-    Route::get('cbt/{id}/submit', [ExamController::class, 'cbtSubmit'])
-    ->name('cbt-submit');
-    //---Display result
-    Route::get('cbt-result/{id}/result', [ExamController::class, 'cbtResult'])
-    ->name('cbt-result');     
-    Route::post('/update-remaining-time/{id}', [ExamController::class, 'updateRemainingTime'])
-    ->name('update-remaining-time'); 
-    //-----Theory Module---------    
-    Route::get('cbt-theory/{id}', [ExamTheoryController::class, 'cbtTheory'])
-    ->name('cbt-theory');
-    Route::get('cbt-theory-page/{id}', [ExamTheoryController::class, 'cbtTheoryPage'])
-    ->name('cbt-theory-page');
-    Route::post('/update-remaining-time-theory/{id}', [ExamTheoryController::class, 'updateRemainingTimeTheory'])
-    ->name('update-remaining-time-theory');  
-    //---Save theory answers ---
-    Route::get('answer-next/{id}', [ExamTheoryController::class, 'answerNext'])
-    ->name('answer-next');
-    Route::get('answer-previous/{id}', [ExamTheoryController::class, 'answerPrevious'])
-    ->name('answer-previous');    
-    Route::post('answer-save/{id}', [ExamTheoryController::class, 'answerSave'])
-    ->name('answer-save');
-    Route::post('save-answer/{id}', [ExamTheoryController::class, 'saveAnswer'])
-    ->name('save-answer');
-    //--Submit Test
-    Route::get('cbt-theory/{id}/submit', [ExamTheoryController::class, 'cbtSubmit'])
-    ->name('cbt-theory-submit');
-    //----result
-    Route::get('cbt-theory-result/{id}/result', [ExamTheoryController::class, 'cbtTheoryResult'])
-    ->name('cbt-theory-result'); 
-    //-------------------------
-    Route::get('signup', [AuthController::class, 'signup'])->name('signup');
-    Route::post('signup', [AuthController::class, 'signupAction'])->name('signup.action');    
-    // Logout route
-    Route::get('student-logout', [AuthController::class, 'studentLogout'])->name('student-logout'); 
-    
+        //-----Dashboard routes-----       
+        Route::get('student/dashboard/{id}', [DashboardController::class, 'indexStudent'])
+        ->name('student-dashboard'); 
+        Route::get('student/report/{id}', [ReportController::class, 'studentReport'])
+        ->name('student-report'); 
+        Route::get('user-dashboard/{id}', [DashboardController::class, 'index'])
+        ->name('dashboard');
+        Route::get('student/course/material/{id}', [DashboardController::class, 'courseMaterial'])
+        ->name('student-course-material'); 
+        Route::get('course/material/{id}/{studentId}', [DashboardController::class, 'courseMaterialView'])
+        ->name('course-material');
+        Route::get('student/cbt/{id}', [DashboardController::class, 'studentCbt'])
+        ->name('student-cbt'); 
+        // ->middleware(StudentAuth::class);  
+        //----Computer Based Test--------
+        Route::post('cbt/{id}', [ExamController::class, 'cbtCheck'])
+        ->name('cbt-check');
+        Route::get('cbt-process/{id}', [ExamController::class, 'cbtProcess'])
+        ->name('cbt-process');   
+        Route::get('cbt-page/{id}', [ExamController::class, 'cbtPage'])
+        ->name('cbt-page');
+        Route::get('cbt/{id}', [ExamController::class, 'cbtContinue'])
+        ->name('cbt-continue');    
+        //---Objective Module--------      
+        Route::get('cbt/{id}/page1', [ExamController::class, 'cbtPage1'])
+        ->name('cbt-page1');
+        Route::get('cbt/{id}/page2', [ExamController::class, 'cbtPage2'])
+        ->name('cbt-page2');
+        Route::get('cbt/{id}/page3', [ExamController::class, 'cbtPage3'])
+        ->name('cbt-page3');
+        Route::get('cbt/{id}/page4', [ExamController::class, 'cbtPage4'])
+        ->name('cbt-page4');
+        Route::get('cbt/{id}/page5', [ExamController::class, 'cbtPage5'])
+        ->name('cbt-page5');
+        Route::get('cbt/{id}/page6', [ExamController::class, 'cbtPage6'])
+        ->name('cbt-page6');
+        Route::get('cbt/{id}/page7', [ExamController::class, 'cbtPage7'])
+        ->name('cbt-page7');
+        Route::get('cbt/{id}/page8', [ExamController::class, 'cbtPage8'])
+        ->name('cbt-page8');
+        Route::get('cbt/{id}/page9', [ExamController::class, 'cbtPage9'])
+        ->name('cbt-page9');
+        Route::get('cbt/{id}/page10', [ExamController::class, 'cbtPage10'])
+        ->name('cbt-page10');     
+        //----Exam Sheet
+        Route::get('exam-sheet/{id}/Page1', [ReportController::class, 'examSheetPage01'])
+            ->name('exam-sheet-page01');
+            Route::get('exam-sheet/{id}/Page2', [ReportController::class, 'examSheetPage02'])
+            ->name('exam-sheet-page02');
+            Route::get('exam-sheet/{id}/Page3', [ReportController::class, 'examSheetPage03'])
+            ->name('exam-sheet-page03');
+            Route::get('exam-sheet/{id}/Page4', [ReportController::class, 'examSheetPage04'])
+            ->name('exam-sheet-page04');
+            Route::get('exam-sheet/{id}/Page5', [ReportController::class, 'examSheetPage05'])
+            ->name('exam-sheet-page05');
+            Route::get('exam-sheet/{id}/Page6', [ReportController::class, 'examSheetPage06'])
+            ->name('exam-sheet-page06');
+            Route::get('exam-sheet/{id}/Page7', [ReportController::class, 'examSheetPage07'])
+            ->name('exam-sheet-page07');
+            Route::get('exam-sheet/{id}/Page8', [ReportController::class, 'examSheetPage08'])
+            ->name('exam-sheet-page08');
+            Route::get('exam-sheet/{id}/Page9', [ReportController::class, 'examSheetPage09'])
+            ->name('exam-sheet-page09');
+            Route::get('exam-sheet/{id}/Page10', [ReportController::class, 'examSheetPage010'])
+            ->name('exam-sheet-page010');
+        //----Update Answers---
+        Route::get('fetch-answers/{id}/{pageNo}', [ExamController::class, 'fetchAnswers'])
+        ->name('fetch-answers');
+        Route::get('fetch-questions/{id}/{pageNo}', [ExamController::class, 'fetchQuestions'])
+        ->name('fetch-questions');
+        Route::post('update-answers/{id}/{pageNo}', [ExamController::class, 'updateAnswersForPage'])
+        ->name('update-answers');
+        // ----Single Questions
+        Route::get('get-question/{questionNumber}', [ExamController::class, 'getSingleQuestion'])
+        ->name('get-question');
+        Route::post('save-single-answer', [ExamController::class, 'saveSingleAnswer'])
+        ->name('save-single-answer');
+        Route::get('/get-attempted-questions', [ExamController::class, 'getAttemptedQuestions'])
+        ->name('get-attempted-questions');
+        //--Submit Test
+        Route::get('cbt/{id}/submit', [ExamController::class, 'cbtSubmit'])
+        ->name('cbt-submit');
+        //---Display result
+        Route::get('cbt-result/{id}/result', [ExamController::class, 'cbtResult'])
+        ->name('cbt-result');     
+        Route::post('/update-remaining-time/{id}', [ExamController::class, 'updateRemainingTime'])
+        ->name('update-remaining-time'); 
+        //-----Theory Module---------    
+        Route::get('cbt-theory/{id}', [ExamTheoryController::class, 'cbtTheory'])
+        ->name('cbt-theory');
+        Route::get('cbt-theory-page/{id}', [ExamTheoryController::class, 'cbtTheoryPage'])
+        ->name('cbt-theory-page');
+        Route::post('/update-remaining-time-theory/{id}', [ExamTheoryController::class, 'updateRemainingTimeTheory'])
+        ->name('update-remaining-time-theory');  
+        //---Save theory answers ---
+        Route::get('answer-next/{id}', [ExamTheoryController::class, 'answerNext'])
+        ->name('answer-next');
+        Route::get('answer-previous/{id}', [ExamTheoryController::class, 'answerPrevious'])
+        ->name('answer-previous');    
+        Route::post('answer-save/{id}', [ExamTheoryController::class, 'answerSave'])
+        ->name('answer-save');
+        Route::post('save-answer/{id}', [ExamTheoryController::class, 'saveAnswer'])
+        ->name('save-answer');
+        //--Submit Test
+        Route::get('cbt-theory/{id}/submit', [ExamTheoryController::class, 'cbtSubmit'])
+        ->name('cbt-theory-submit');
+        //----result
+        Route::get('cbt-theory-result/{id}/result', [ExamTheoryController::class, 'cbtTheoryResult'])
+        ->name('cbt-theory-result'); 
+        //-------------------------
+        Route::get('signup', [AuthController::class, 'signup'])->name('signup');
+        Route::post('signup', [AuthController::class, 'signupAction'])->name('signup.action');    
+        // Logout route
+        Route::get('student-logout', [AuthController::class, 'studentLogout'])->name('student-logout'); 
+
+        // STUDENT LMS ROUTES-----
+        Route::prefix('lms')->group(function () {
+                Route::get('student/lms/dashboard', [StudentDashboardController::class, 'index'])
+                ->name('student.lms.dashboard');
+
+            });
     });
 
     //----Admin routes--
@@ -484,10 +491,7 @@ Route::get('/', function () {
         // E-learning routes
         
         
-            Route::prefix('admin')
-            ->middleware(['auth'])
-            ->group(function () {
-
+            Route::prefix('admin')->middleware(['auth'])->group(function () {
             /*
             |--------------------------------------------------------------------------
             | 🎯 DASHBOARD
@@ -586,8 +590,7 @@ Route::get('/', function () {
                 Route::post('/admin/settings/live-update', [AdminSettingsController::class, 'liveUpdate'])
                 ->name('admin.settings.live-update');
             });
-        });
-                
+        });                
            
   
     });

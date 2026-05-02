@@ -63,6 +63,11 @@ class User extends Authenticatable
         
     ];
 
+    public function isStudent()
+    {
+        return $this->role === 'student';
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

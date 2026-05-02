@@ -143,14 +143,12 @@
                                 <i class="fa-solid fa-user"></i> Profile
                             </a>
                         </li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button class="dropdown-item">
-                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
-                                </button>
-                            </form>
+                        <li class="nav-item">
+                            <a class="dropdown-item" href="{{ route('admin-login') }}">
+                                <i class="fa-solid fa-right-from-bracket"></i></i> Logout
+                            </a>
                         </li>
+                        
                     </ul>
                 </li>
 

@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\AdminSetting;
+use App\Models\AdminSettings;
 
 function setting($key, $default = null)
 {
-    return Setting::where('key', $key)->value('value') ?? $default;
+    return \App\Models\AdminSettings::where('key', $key)->value('value') ?? $default;
 }
