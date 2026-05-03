@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Student;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\StudentAdmission;
@@ -11,12 +11,14 @@ use App\Models\StudentProgress;
 
 class StudentDashboardController extends Controller
 {
-    public function index()
+    public function index($id)
     {
-        $student = auth()->user(); // assuming student uses same auth
+        $studentId = $id; 
+        $student = StudentAdmission::where('id', $id)->first();
+
 
         // 🎓 Courses by programme
-        $courses = Course::where('programme_id', $student->programme_id)->get();
+        $courses = Course::where('programme', $student->department)->get();
 
         $courseStats = [];
         $totalProgress = 0;
@@ -71,13 +73,14 @@ class StudentDashboardController extends Controller
             $alerts[] = "Your progress is below average";
         }
 
-        return view('student.dashboard', compact(
+        return view('studentLms.index', compact(
             'courseStats',
             'overallProgress',
             'lastActivity',
             'inactiveDays',
             'streak',
-            'alerts'
+            'alerts',
+            'student'
         ));
     }
 }

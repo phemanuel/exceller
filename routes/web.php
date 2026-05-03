@@ -188,7 +188,7 @@ Route::get('/', function () {
 
         // STUDENT LMS ROUTES-----
         Route::prefix('lms')->group(function () {
-                Route::get('student/lms/dashboard', [StudentDashboardController::class, 'index'])
+                Route::get('student/lms/dashboard/{id}', [StudentDashboardController::class, 'index'])
                 ->name('student.lms.dashboard');
 
             });

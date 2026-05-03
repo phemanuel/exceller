@@ -1121,7 +1121,7 @@ class DashboardController extends Controller
 
                     // If no exam is available for the student’s department/level
                     if (!$examSetting) {
-                        return redirect()->back()->with('error', 'The exam is not available.');
+                        return redirect()->back()->with('error', 'No exam is in progress for this programme.');
                     }
 
                     // Check if the exam has been locked
@@ -1147,7 +1147,7 @@ class DashboardController extends Controller
 
                     // If no exam is available for the student’s department/level
                     if (!$examSetting) {
-                        return redirect()->back()->with('error', 'The exam is not available.');
+                        return redirect()->back()->with('error', 'No exam is in progress for this programme.');
                     }
 
                     // Check if the exam has been locked
