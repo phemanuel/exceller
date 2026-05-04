@@ -134,7 +134,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                         <i class="fa-solid fa-user"></i>
-                        {{ auth()->user()->name ?? 'User' }}
+                        {{ auth()->user()->first_name ?? 'User' }}
                     </a>
 
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -144,7 +144,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="dropdown-item" href="{{ route('admin-login') }}">
+                            <a class="dropdown-item" href="{{ route('login') }}">
                                 <i class="fa-solid fa-right-from-bracket"></i></i> Logout
                             </a>
                         </li>

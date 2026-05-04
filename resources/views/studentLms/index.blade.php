@@ -6,6 +6,52 @@
 
 <div class="container-fluid">
 
+<div class="card mb-4 shadow-sm border-0 p-3">
+
+    <div class="d-flex align-items-center justify-content-between">
+
+        <!-- LEFT SIDE -->
+        <div class="d-flex align-items-center">
+
+            <img src="{{ $studentInfo['picture'] }}"
+                 class="rounded-circle me-3"
+                 width="70"
+                 height="70"
+                 style="object-fit: cover; border: 2px solid #e5e7eb;">
+
+            <div>
+                <h5 class="mb-1 fw-bold">{{ $studentInfo['name'] }}</h5>
+                <small class="text-muted">
+                    🎓 {{ $studentInfo['programme'] }}
+                </small>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE (STATS) -->
+        <div class="d-flex gap-4 text-center">
+
+            <div>
+                <h6 class="mb-0 fw-bold">{{ $studentInfo['total_courses'] }}</h6>
+                <small class="text-muted">Courses</small>
+            </div>
+
+            <div>
+                <h6 class="mb-0 fw-bold">{{ $studentInfo['total_modules'] }}</h6>
+                <small class="text-muted">Modules</small>
+            </div>
+
+            <div>
+                <h6 class="mb-0 fw-bold">{{ $studentInfo['total_materials'] }}</h6>
+                <small class="text-muted">Materials</small>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
     <!-- 🔥 ALERTS -->
     @if(count($alerts))
         <div class="alert alert-warning shadow-sm border-0">
@@ -108,9 +154,22 @@
                         </div>
                     </div>
 
+                    @php
+                        $progress = $row['progress'];
+                    @endphp
+
                     <a href="#"
-                       class="btn btn-outline-primary btn-sm w-100">
-                        🎯 Continue Learning
+                    class="btn btn-sm w-100
+                    {{ $progress == 100 ? 'btn-success' : ($progress > 0 ? 'btn-primary' : 'btn-outline-primary') }}">
+
+                        @if($progress == 0)
+                            🚀 Start Learning
+                        @elseif($progress > 0 && $progress < 100)
+                            🎯 Continue Learning
+                        @else
+                            👁️ View Course
+                        @endif
+
                     </a>
 
                 </div>

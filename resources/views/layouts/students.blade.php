@@ -121,9 +121,9 @@
 
         <!-- Logout -->
         <li class="nav-item">
-            <a href="{{ route('logout') }}"
+            <a href="{{ route('student-dashboard', ['id' => $student->id]) }}"
                class="nav-link text-danger"
-               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+               >
                 <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout
             </a>
         </li>
@@ -154,9 +154,7 @@
 
 </div>
 
-<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-    @csrf
-</form>
+
 
 </body>
 </html>

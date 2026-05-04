@@ -71,7 +71,27 @@ class StudentDashboardController extends Controller
 
         if ($overallProgress < 30) {
             $alerts[] = "Your progress is below average";
-        }
+        }        
+
+        $totalCourses = $courses->count();
+
+        $totalModules = \App\Models\CourseModule::whereIn('course_id', $courses->pluck('id'))->count();
+
+        $totalMaterials = \App\Models\CourseMaterial::whereIn('course_module_id',
+            \App\Models\CourseModule::whereIn('course_id', $courses->pluck('id'))->pluck('id')
+        )->count();
+
+        $studentInfo = [
+            'name' => $student->surname . ' ' . $student->first_name . ' ' . $student->other_name,
+            'programme' => $student->department?? 'N/A',
+            'picture' => $student->picture_name
+                ? asset('uploads/students/' . $student->picture_name . ".jpg")
+                : asset('uploads/blank.jpg'),
+
+            'total_courses' => $totalCourses,
+            'total_modules' => $totalModules,
+            'total_materials' => $totalMaterials,
+        ];
 
         return view('studentLms.index', compact(
             'courseStats',
@@ -80,7 +100,8 @@ class StudentDashboardController extends Controller
             'inactiveDays',
             'streak',
             'alerts',
-            'student'
+            'student',
+            'studentInfo'
         ));
     }
 }
