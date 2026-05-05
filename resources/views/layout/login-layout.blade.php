@@ -127,7 +127,7 @@
                 <option value="">-- Select Programme --</option>
                 @foreach($dept as $rs)
                     <option value="{{ $rs->department }}">
-                        {{ $rs->department }}
+                        {{ $rs->programme }}
                     </option>
                 @endforeach
             </select>

@@ -249,7 +249,15 @@
 
                                 <td>
                                     <!-- EDIT (can reuse modal later) -->
-                                    <button class="btn btn-sm btn-warning">
+                                    <button class="btn btn-sm btn-warning editProgrammeBtn"
+                                        data-id="{{ $prog->id }}"
+                                        data-department="{{ $prog->department }}"
+                                        data-programme="{{ $prog->programme }}"
+                                        data-start_level="{{ $prog->start_level }}"
+                                        data-duration="{{ $prog->duration }}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editProgrammeModal">
+
                                         Edit
                                     </button>
 
@@ -336,7 +344,66 @@
 
     </div>
 </div>
+<!-- edit modal -->
+<div class="modal fade" id="editProgrammeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
 
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Programme</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <form method="POST" id="editProgrammeForm">
+                    @csrf
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <label>Department</label>
+                            <input type="text" name="department" id="edit_department" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Programme</label>
+                            <input type="text" name="programme" id="edit_programme" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Start Level</label>
+                            <select name="start_level" id="edit_start_level" class="form-control">
+                                <option>100</option>
+                                <option>200</option>
+                                <option>300</option>
+                                <option>NDI</option>
+                                <option>NDII</option>
+                                <option>HNDI</option>
+                                <option>HNDII</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Duration</label>
+                            <input type="number" name="duration" id="edit_duration" class="form-control" required>
+                        </div>
+
+                    </div>
+
+                    <button class="btn btn-success mt-3">
+                        Update Programme
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
 <style>
     .settings-block {
     background: #fff;
@@ -516,5 +583,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+</script>
+
+<script>
+document.querySelectorAll('.editProgrammeBtn').forEach(button => {
+
+const updateUrlTemplate = "{{ route('settings.programmes.update', ':id') }}";
+
+    button.addEventListener('click', function () {
+
+        let id = this.dataset.id;
+
+        // Fill form fields
+        document.getElementById('edit_department').value = this.dataset.department;
+        document.getElementById('edit_programme').value = this.dataset.programme;
+        document.getElementById('edit_start_level').value = this.dataset.start_level;
+        document.getElementById('edit_duration').value = this.dataset.duration;
+
+        // Set dynamic form action safely
+        document.getElementById('editProgrammeForm').action =
+            updateUrlTemplate.replace(':id', id);
+
+    });
+
+});
 </script>
 @endsection

@@ -36,7 +36,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('student.course.view', $row['course']->id) }}"
+                    <a href="{{ route('student.course.view', ['id' => $student->id , 'course_id' => $row['course']->id]) }}"
                        class="btn btn-sm w-100
                        {{ $progress == 100 ? 'btn-success' : ($progress > 0 ? 'btn-primary' : 'btn-outline-primary') }}">
 

@@ -28,6 +28,7 @@ use App\Http\Controllers\ProgressAnalyticsController;
 use App\Http\Controllers\AdminSettingsController;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\StudentCourseController;
+use App\Http\Controllers\StudentMaterialController;
 
 /*
 /*
@@ -192,10 +193,16 @@ Route::get('/', function () {
                 Route::get('student/lms/dashboard/{id}', [StudentDashboardController::class, 'index'])
                 ->name('student.lms.dashboard');
                 Route::get('/student/courses/{id}', [StudentCourseController::class, 'index'])
-                    ->name('student.courses');
-
-                Route::get('/student/course/{id}', [StudentCourseController::class, 'show'])
-                    ->name('student.course.view');
+                ->name('student.courses');
+                Route::get('/student/{id}/course/{course_id}', [StudentCourseController::class, 'show'])
+                ->name('student.course.view');
+                Route::get('/student/{id}/material/{material_id}/ajax', 
+                [StudentMaterialController::class, 'ajaxView'])
+                ->name('student.material.ajax');
+                Route::get('/student/{id}/material/{material_id}/view', [StudentMaterialController::class, 'view'])
+                ->name('student.material.full');
+                Route::post('/student/{id}/material/{material_id}/complete', [StudentMaterialController::class, 'complete'])
+                ->name('student.material.complete');
 
             });
     });

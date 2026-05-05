@@ -76,9 +76,21 @@ class AdminSettingsController extends Controller
     /* UPDATE */
     public function updateProgramme(Request $request, $id)
     {
+        $request->validate([
+            'department' => 'required',
+            'programme' => 'required',
+            'start_level' => 'required',
+            'duration' => 'required'
+        ]);
+
         $programme = CourseStudyAll::findOrFail($id);
 
-        $programme->update($request->all());
+        $programme->update($request->only([
+            'department',
+            'programme',
+            'start_level',
+            'duration'
+        ]));
 
         return back()->with('success', 'Programme updated successfully');
     }

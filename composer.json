@@ -16,7 +16,8 @@
         "phpoffice/phpspreadsheet": "^1.30",
         "spatie/laravel-html": "^3.9",
         "spatie/laravel-permission": "^6.7",
-        "tecnickcom/tc-lib-pdf": "^8.0"
+        "tecnickcom/tc-lib-pdf": "^8.0",
+        "vinkla/hashids": "^11.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -34,8 +35,10 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-        "app/Helpers/helpers.php"
+        "app/Helpers/helpers.php",
+        "app/Helpers/video.php"
         ]
+    
     },
     "autoload-dev": {
         "psr-4": {

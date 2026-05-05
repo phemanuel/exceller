@@ -136,7 +136,7 @@
     <!-- 📚 COURSES GRID -->
     <div class="row">
 
-        @foreach($courseStats as $row)
+        @foreach(collect($courseStats)->take(3) as $row)
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm border-0">
 
@@ -150,7 +150,7 @@
 
                     <div class="progress my-3" style="height:8px;">
                         <div class="progress-bar bg-success"
-                             style="width: {{ $row['progress'] }}%">
+                            style="width: {{ $row['progress'] }}%">
                         </div>
                     </div>
 
@@ -158,7 +158,7 @@
                         $progress = $row['progress'];
                     @endphp
 
-                    <a href="#"
+                    <a href="{{ route('student.course.view', ['id' => $student->id , 'course_id' => $row['course']->id]) }}"
                     class="btn btn-sm w-100
                     {{ $progress == 100 ? 'btn-success' : ($progress > 0 ? 'btn-primary' : 'btn-outline-primary') }}">
 
@@ -179,6 +179,17 @@
         @endforeach
 
     </div>
+    
+    @if(count($courseStats) >= 3)
+    <div class="text-center mt-2 mb-4">
+        <a href="{{ route('student.courses', ['id' => $student->id]) }}"
+        class="btn btn-outline-primary px-4">
+
+            📚 View More Courses
+
+        </a>
+    </div>
+    @endif
 
 </div>
 

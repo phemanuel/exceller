@@ -30,11 +30,22 @@ class StudentDashboardController extends Controller
             })->count();
 
             $completed = StudentProgress::where('student_id', $student->id)
-                ->where('course_id', $course->id)
-                ->where('is_completed', 1)
-                ->count();
+            ->where('is_completed', 1)
+            ->whereIn('material_id', function ($q) use ($course) {
+                $q->select('id')
+                ->from('course_materials')
+                ->whereIn('course_module_id', function ($q2) use ($course) {
+                    $q2->select('id')
+                        ->from('course_modules')
+                        ->where('course_id', $course->id);
+                });
+            })
+            ->distinct('material_id')
+            ->count('material_id');
 
-            $percent = $materials > 0 ? round(($completed / $materials) * 100) : 0;
+            $percent = $materials > 0
+                ? round(($completed / $materials) * 100)
+                : 0;
 
             $totalProgress += $percent;
 

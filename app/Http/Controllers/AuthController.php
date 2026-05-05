@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Session;
 use App\Models\CollegeSetup;
 use App\Models\SoftwareVersion;
 use App\Models\ExamSetting;
+use App\Models\CourseStudyAll;
 
 class AuthController extends Controller
 {
@@ -39,7 +40,8 @@ class AuthController extends Controller
 
     public function login()
     {
-        $dept = Department::orderBy('department')->get();
+        // $dept = Department::orderBy('department')->get();
+        $dept = CourseStudyAll::orderBy('programme')->get();
         $collegeSetup = CollegeSetup::first();
         $softwareVersion = SoftwareVersion::first();
         return view('auth.user-login', compact('dept','collegeSetup','softwareVersion'));

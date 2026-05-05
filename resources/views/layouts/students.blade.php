@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Student Panel</title>
+    <title>Student LMS</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -62,8 +62,8 @@
     <ul class="nav flex-column">
 
         <li class="nav-item">
-            <a href="{{ route('student.dashboard') }}"
-               class="nav-link {{ request()->routeIs('student.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('student.lms.dashboard', ['id' => $student->id]) }}"
+               class="nav-link {{ request()->routeIs('student.lms.dashboard') ? 'active' : '' }}">
                 <i class="fa-solid fa-chart-line me-2"></i> Dashboard
             </a>
         </li>

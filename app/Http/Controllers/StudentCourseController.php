@@ -44,12 +44,12 @@ class StudentCourseController extends Controller
         return view('studentlms.courses.index', compact('courseStats','student'));
     }
 
-    public function show($id)
+    public function show($id, $course_id)
     {
-        $student = auth()->user();
+        $student = StudentAdmission::where('id', $id)->first();
 
         // 🎓 Course
-        $course = Course::findOrFail($id);
+        $course = Course::findOrFail($course_id);
 
         // 📚 Modules
         $modules = CourseModule::where('course_id', $course->id)
@@ -69,11 +69,12 @@ class StudentCourseController extends Controller
             $total = $materials->count();
 
             $completed = StudentProgress::where('student_id', $student->id)
-                ->where('course_module_id', $module->id)
+                ->where('module_id', $module->id)
                 ->where('is_completed', 1)
-                ->count();
+                ->distinct('material_id')
+                ->count('material_id');
 
-            $progress = $total > 0 ? round(($completed / $total) * 100) : 0;
+            $progress = $total ? intval(($completed / $total) * 100) : 0;
 
             // 🔒 MODULE LOCK LOGIC
             $previousModule = CourseModule::where('course_id', $course->id)
@@ -87,7 +88,7 @@ class StudentCourseController extends Controller
                 $prevTotal = CourseMaterial::where('course_module_id', $prev->id)->count();
 
                 $prevCompleted = StudentProgress::where('student_id', $student->id)
-                    ->where('course_module_id', $prev->id)
+                    ->where('module_id', $prev->id)
                     ->where('is_completed', 1)
                     ->count();
 
@@ -100,12 +101,13 @@ class StudentCourseController extends Controller
             $moduleData[] = [
                 'module' => $module,
                 'materials' => $materials,
+                'week' => $module->module_number,
                 'progress' => $progress,
                 'unlocked' => $isUnlocked
             ];
         }
 
-        return view('student.course_view', compact('course', 'moduleData'));
+        return view('studentlms.courses.course_view', compact('course', 'moduleData','student'));
     }
 
 

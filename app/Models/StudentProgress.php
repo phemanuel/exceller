@@ -13,7 +13,9 @@ class StudentProgress extends Model
         'module_id',
         'material_id',
         'is_completed',
-        'completed_at'
+        'completed_at',
+        'last_viewed_at',
+        'time_spent_seconds',
     ];
 
     public function student()
