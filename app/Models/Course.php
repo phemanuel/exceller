@@ -14,6 +14,7 @@ class Course extends Model
         'programme',
         'level',
         'description',
+        'semester',
     ];
 
     public function modules()

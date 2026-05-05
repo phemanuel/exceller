@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('programme')->nullable();
             $table->string('level')->nullable();
+            $table->string('semester')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
         });

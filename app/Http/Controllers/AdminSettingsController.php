@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AdminSettings;
+use App\Models\CourseStudyAll;
 use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,8 +15,9 @@ class AdminSettingsController extends Controller
     {
         $settings = AdminSettings::pluck('value', 'key');
         $timezones = DateTimeZone::listIdentifiers();
+        $programmes = CourseStudyAll::latest()->get();
 
-        return view('admin.settings.index', compact('settings','timezones'));
+        return view('admin.settings.index', compact('settings','timezones','programmes'));
     }
 
     public function update(Request $request)
@@ -48,4 +50,45 @@ class AdminSettingsController extends Controller
             'message' => 'Updated successfully'
         ]);
     }
+
+    public function programmes()
+    {
+        $programmes = CourseStudyAll::latest()->get();
+
+        return view('admin.settings.programmes', compact('programmes'));
+    }
+
+    /* CREATE */
+    public function storeProgramme(Request $request)
+    {
+        $request->validate([
+            'department' => 'required',
+            'programme' => 'required',
+            'start_level' => 'required',
+            'duration' => 'required'
+        ]);
+
+        CourseStudyAll::create($request->all());
+
+        return back()->with('success', 'Programme created successfully');
+    }
+
+    /* UPDATE */
+    public function updateProgramme(Request $request, $id)
+    {
+        $programme = CourseStudyAll::findOrFail($id);
+
+        $programme->update($request->all());
+
+        return back()->with('success', 'Programme updated successfully');
+    }
+
+    /* DELETE */
+    public function deleteProgramme($id)
+    {
+        CourseStudyAll::findOrFail($id)->delete();
+
+        return back()->with('success', 'Programme deleted successfully');
+    }
+
 }

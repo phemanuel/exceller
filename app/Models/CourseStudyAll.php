@@ -18,7 +18,7 @@ class CourseStudyAll extends Model
 
     protected $fillable = [
         'department',
-        'dept',
+        'programme',
         'duration',
         'start_level',
     ];

@@ -53,6 +53,17 @@
             </select>
         </div>
 
+        <!-- Semester -->
+        <div class="mb-3">
+            <label>Semester</label>
+            <select name="semester" class="form-control" required>
+                <!-- <option value="">Select Semester</option>  -->
+                <option value="{{$course->semester}}" selected>{{$course->semester}}</option>               
+                    <option value="FIRST">FIRST</option>
+                    <option value="SECOND">SECOND</option>
+            </select>
+        </div>
+
         <!-- Description -->
         <div class="mb-3">
             <label>Description</label>

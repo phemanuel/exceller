@@ -49,6 +49,7 @@ class CourseController extends Controller
             'title' => 'required|string|max:255',
             'programme' => 'nullable|string|max:255',
             'level' => 'nullable|string|max:255',
+            'semester' => 'nullable|string',
             'description' => 'nullable|string',
         ]);
 
@@ -98,6 +99,7 @@ class CourseController extends Controller
             'title' => 'required|string|max:255',
             'programme' => 'nullable|string|max:255',
             'level' => 'nullable|string|max:255',
+            'semester' => 'nullable|string',
             'description' => 'nullable|string',
         ]);
 

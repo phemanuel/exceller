@@ -16,6 +16,7 @@
                 <a href="#learning-card" class="list-group-item">📚 Learning</a>
                 <a href="#notification-card" class="list-group-item">🔔 Notifications</a>
                 <a href="#security-card" class="list-group-item">🔐 Security</a>
+                <a href="#programme-card" class="list-group-item">🏫 Programmes</a>
             </div>
         </div>
     </div>
@@ -211,11 +212,130 @@
             </div>
         </div>
 
+        <div class="card mt-3" id="programme-card">
+            <div class="card-body">
+
+               <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <h5 class="mb-0">Existing Programmes</h5>
+
+                    <!-- CREATE BUTTON -->
+                    <button class="btn btn-primary btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#programmeModal">
+                        + Create Programme
+                    </button>
+
+               </div>
+
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>Programme</th>
+                            <th>Start Level</th>
+                            <th>Duration</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach($programmes as $prog)
+                            <tr>
+                                <td>{{ $prog->department }}</td>
+                                <td>{{ $prog->programme }}</td>
+                                <td>{{ $prog->start_level }}</td>
+                                <td>{{ $prog->duration }} yrs</td>
+
+                                <td>
+                                    <!-- EDIT (can reuse modal later) -->
+                                    <button class="btn btn-sm btn-warning">
+                                        Edit
+                                    </button>
+
+                                    <form action="{{ route('settings.programmes.delete', $prog->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button class="btn btn-sm btn-danger">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
     </div>
 
 </div>
 </div>
 
+<div class="modal fade" id="programmeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Programme Management</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- FORM -->
+                <form method="POST" action="{{ route('settings.programmes.store') }}">
+                    @csrf
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <label>Department</label>
+                            <input type="text" name="department" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Programme</label>
+                            <input type="text" name="programme" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Start Level</label>
+                            <select name="start_level" class="form-control">
+                                <option>100</option>
+                                <option>200</option>
+                                <option>300</option>
+                                <option>NDI</option>
+                                <option>NDII</option>
+                                <option>HNDI</option>
+                                <option>HNDII</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Duration (Years)</label>
+                            <input type="number" name="duration" class="form-control" required>
+                        </div>
+
+                    </div>
+
+                    <button class="btn btn-primary mt-3">
+                        Save Programme
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
 
 <style>
     .settings-block {

@@ -69,8 +69,8 @@
         </li>
 
         <li class="nav-item">
-            <a href="#"
-               class="nav-link">
+            <a href="{{ route('student.courses', ['id' => $student->id]) }}"
+            class="nav-link {{ request()->routeIs('student.courses*') ? 'active' : '' }}">
                 <i class="fa-solid fa-book me-2"></i> Course View
             </a>
         </li>

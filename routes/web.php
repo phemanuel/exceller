@@ -27,6 +27,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ProgressAnalyticsController;
 use App\Http\Controllers\AdminSettingsController;
 use App\Http\Controllers\StudentDashboardController;
+use App\Http\Controllers\StudentCourseController;
 
 /*
 /*
@@ -190,6 +191,11 @@ Route::get('/', function () {
         Route::prefix('lms')->group(function () {
                 Route::get('student/lms/dashboard/{id}', [StudentDashboardController::class, 'index'])
                 ->name('student.lms.dashboard');
+                Route::get('/student/courses/{id}', [StudentCourseController::class, 'index'])
+                    ->name('student.courses');
+
+                Route::get('/student/course/{id}', [StudentCourseController::class, 'show'])
+                    ->name('student.course.view');
 
             });
     });
@@ -589,6 +595,14 @@ Route::get('/', function () {
                 ->name('admin.settings.index');
                 Route::post('/admin/settings/live-update', [AdminSettingsController::class, 'liveUpdate'])
                 ->name('admin.settings.live-update');
+                Route::get('/programmes', [AdminSettingsController::class, 'programmes'])
+                ->name('settings.programmes');
+                Route::post('/programmes/store', [AdminSettingsController::class, 'storeProgramme'])
+                ->name('settings.programmes.store');
+                Route::post('/programmes/update/{id}', [AdminSettingsController::class, 'updateProgramme'])
+                ->name('settings.programmes.update');
+                Route::delete('/programmes/delete/{id}', [AdminSettingsController::class, 'deleteProgramme'])
+                ->name('settings.programmes.delete');
             });
         });                
            

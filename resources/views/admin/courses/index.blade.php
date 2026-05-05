@@ -23,95 +23,115 @@
             <button class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif -->
+    @php
+        $groupedCourses = $courses->groupBy('programme');
+    @endphp
+    <div class="row">
 
-    <!-- Table -->
-    <div class="table-responsive">
-        <table class="table table-hover align-middle">
+        @forelse($groupedCourses as $programme => $programmeCourses)
+            
+            <div class="col-12 mb-4">
 
-            <thead class="table-light">
-                <tr>
-                    <th>#</th>
-                    <th>Course Title</th>
-                    <th>Programme</th>
-                    <th>Level</th>
-                    <th>Modules</th>
-                    <th>Created</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
+                <!-- Programme Card -->
+                <div class="card shadow-sm">
 
-            <tbody>
-
-                @forelse($courses as $course)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-
-                        <td>
-                            <strong>{{ $course->title }}</strong>
-                        </td>
-
-                        <td>
-                            {{ $course->programme ?? '-' }}
-                        </td>
-
-                        <td>
-                            {{ $course->level ?? '-' }}
-                        </td>
-
-                        <td>
-                            <span class="badge bg-info">
-                                {{ $course->modules_count ?? 0 }}
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            {{ $programme ?? 'Unassigned Programme' }}
+                            <span class="badge bg-light text-dark ms-2">
+                                {{ $programmeCourses->count() }} Courses
                             </span>
-                        </td>
+                        </h5>
+                    </div>
 
-                        <td>
-                            {{ $course->created_at->format('d M, Y') }}
-                        </td>
+                    <div class="card-body p-0">
 
-                        <!-- Actions -->
-                        <td class="text-end">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
 
-                            <!-- View -->
-                            <a href="{{ route('courses.show', $course->id) }}"
-                               class="btn btn-sm btn-success">
-                                <i class="fa fa-eye"></i>
-                            </a>
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Course Title</th>
+                                        <th>Level</th>
+                                        <th>Semester</th>
+                                        <th>Modules</th>
+                                        <th>Created</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
 
-                            <!-- Edit -->
-                            <a href="{{ route('courses.edit', $course->id) }}"
-                               class="btn btn-sm btn-warning">
-                                <i class="fa fa-edit"></i>
-                            </a>
+                                <tbody>
+                                    @foreach($programmeCourses as $course)
 
-                            <!-- Delete -->
-                            <form action="{{ route('courses.destroy', $course->id) }}"
-                                  method="POST"
-                                  class="d-inline"
-                                  onsubmit="return confirm('Delete this course?')">
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
 
-                                @csrf
-                                @method('DELETE')
+                                            <td>
+                                                <strong>{{ $course->title }}</strong>
+                                            </td>
 
-                                <button class="btn btn-sm btn-danger">
-                                    <i class="fa fa-trash"></i>
-                                </button>
+                                            <td>{{ $course->level ?? '-' }}</td>
 
-                            </form>
+                                            <td>{{ $course->semester ?? '-' }}</td>
 
-                        </td>
-                    </tr>
+                                            <td>
+                                                <span class="badge bg-info">
+                                                    {{ $course->modules_count ?? 0 }}
+                                                </span>
+                                            </td>
 
-                @empty
-                    <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
-                            No courses found. Click "Add Course" to create one.
-                        </td>
-                    </tr>
-                @endforelse
+                                            <td>
+                                                {{ $course->created_at->format('d M, Y') }}
+                                            </td>
 
-            </tbody>
+                                            <td class="text-end">
 
-        </table>
+                                                <a href="{{ route('courses.show', $course->id) }}"
+                                                class="btn btn-sm btn-success">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+
+                                                <a href="{{ route('courses.edit', $course->id) }}"
+                                                class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+
+                                                <form action="{{ route('courses.destroy', $course->id) }}"
+                                                    method="POST"
+                                                    class="d-inline"
+                                                    onsubmit="return confirm('Delete this course?')">
+
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button class="btn btn-sm btn-danger">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+
+                                                </form>
+
+                                            </td>
+                                        </tr>
+
+                                    @endforeach
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        @empty
+            <div class="col-12 text-center text-muted py-5">
+                No courses found. Click "Add Course" to create one.
+            </div>
+        @endforelse
+
     </div>
 
 </div>
