@@ -194,7 +194,7 @@ Route::get('/', function () {
                 ->name('student.lms.dashboard');
                 Route::get('/student/courses/{id}', [StudentCourseController::class, 'index'])
                 ->name('student.courses');
-                Route::get('/student/{id}/course/{course_id}', [StudentCourseController::class, 'show'])
+                Route::get('/student/{id}/course/{course_id}/', [StudentCourseController::class, 'show'])
                 ->name('student.course.view');
                 Route::get('/student/{id}/material/{material_id}/ajax', 
                 [StudentMaterialController::class, 'ajaxView'])

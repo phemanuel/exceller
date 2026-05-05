@@ -1,6 +1,6 @@
 @extends('layouts.students')
 
-@section('title', $course->title)
+@section('title', 'Course Learning Modules')
 
 @section('content')
 
@@ -17,7 +17,7 @@
             </div>
 
             <!-- BACK BUTTON -->
-            <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm">
+            <a href="{{ route('student.courses', ['id' => $student->id]) }}" class="btn btn-outline-secondary btn-sm">
                 ← Back
             </a>
 
